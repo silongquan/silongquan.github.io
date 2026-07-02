@@ -16,7 +16,7 @@ timezone: Asia/Shanghai
 
 title: Quansilong's blog # the main title
 
-tagline: Welcome to my blog # it will display as the sub-title
+tagline: Welcome to my blog! # it will display as the sub-title
 
 description: >- # used by seo meta and the atom feed
   Record what should be recorded.
