@@ -388,3 +388,176 @@ Ready-to-use PP tables are available [here](https://pseudopotentials.quantum-esp
 
 
 <font size="4" color="red"><b>这是红色加粗的大号字体</b></font>
+
+```
+# Import OVITO modules.
+import ovito
+from ovito.data import *
+from ovito.io import import_file, export_file
+from ovito.modifiers import ExpressionSelectionModifier,CommonNeighborAnalysisModifier,ClearSelectionModifier
+
+# Import NumPy module.
+import numpy as np
+
+import os
+import subprocess
+
+# Load a simulation snapshot of a Cu-Zr metallic glass.
+node = import_file("./twinGB-w-2TB.714.300-gengzi.xyz")
+
+
+#node.modifiers.append(ExpressionSelectionModifier(expression='defect==3'))
+node.modifiers.append(CommonNeighborAnalysisModifier())
+
+
+#导出结果到文件,先写入数据表头
+with open('./cna_data.dat','a+') as f:
+    f.write("timestep \t number_bcc \t fraction_bcc \t number_fcc \t fraction_fcc \t number_hcp \t fraction_hcp \t \
+        number_ico \t fraction_ico \t number_othe \t fraction_other \n")
+with open('./bda_data.dat','a+') as f:
+    f.write("timestep \t bcc_num \t bcc_num_per \t surface_num \t surface_num_per \t vacancy_num \t vacancy_num_per \t \
+        dislocation_num \t dislocation_num_per \t twin_num \t twin_num_per \t planar_fault_num \t planar_fault_num_per \t \
+        other_num \t other_num_per \n")
+
+
+for frame in range(node.source.num_frames):
+# for frame in range(5):
+    data = node.compute(frame)
+
+    timestep=data.attributes['Timestep']
+    frame_num=data.attributes['SourceFrame']
+
+    #计算结果输出：bcc/fcc/hcp/other原子数, 原子总数
+    print(data.attributes['CommonNeighborAnalysis.counts.OTHER'])
+    number_bcc=data.attributes['CommonNeighborAnalysis.counts.BCC']
+    number_fcc=data.attributes['CommonNeighborAnalysis.counts.FCC']
+    number_hcp=data.attributes['CommonNeighborAnalysis.counts.HCP']
+    number_ico=data.attributes['CommonNeighborAnalysis.counts.ICO']
+    number_other=data.attributes['CommonNeighborAnalysis.counts.OTHER']
+    total_number=data.particles.count
+
+
+    #bcc/fcc/hcp/other相分数
+    fraction_bcc= number_bcc/total_number
+    fraction_fcc= number_fcc/total_number
+    fraction_hcp= number_hcp/total_number
+    fraction_ico= number_ico/total_number
+    fraction_other= number_other/total_number
+
+    #导出结果到文件
+    with open('./cna_data.dat','a+') as f:
+        f.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(\
+            timestep,number_bcc,fraction_bcc,number_fcc,fraction_fcc,number_hcp,fraction_hcp,\
+                number_ico,fraction_ico,number_other,fraction_other))
+
+
+
+    #导出各帧为imd文件
+    i=frame
+
+    # export_file(node, f"output.{i}.imd", "imd", frame=i)
+    # export_file(node, f"output.{i}.data", "lammps/dump", frame=i, ignore_identifiers=True)
+    # export_file(data, f"output.{i}.imd", "imd", frame=i)
+
+    calculate_list = 183.8*np.ones(len(data.particles["Particle Identifier"]))
+    data.particles_.create_property('Mass', data = calculate_list)
+    export_file(data, f"output-{i}.imd", "imd", frame=i, columns = ['Particle Identifier','Particle Type','Mass','Position'])
+
+
+    #BCC缺陷分析
+    filename="output-"+str(i)+".imd"
+    print(filename)
+
+    # os.system("atomsk.exe output.{i}.data imd")
+
+    # subprocess.run("python ovitos_bcc-defect-analysis.py -c filename -a 3.165 -b 1 1 0 -i")
+    os.system("python ovitos_bcc-defect-analysis.py %s %s %s" % ('-c', filename, '-a 3.165 -b 1 1 0 -i'))
+
+    # print(data.attributes['ExpressionSelection.count'])
+    # print(data.attributes['SelectExpression.num_selected'])
+
+
+    #bda文件处理，计算不同缺陷数目、百分比
+    node_bad = import_file(f"./output-{i}.imd.bda")
+
+    # Define numbers for defects:
+    # blk=0       # 完美的bcc块体
+    # srf=1       # 表面原子
+    #  vcn=2       # 空缺(vacancy)
+    # dsl=3       # 位错(dislocation)
+    # twn=4       # 孪晶(twin boundary)
+    # plf=5       # 平面层错(planar fault)
+    # els=6       # 其他缺陷
+
+    modifertemp=ExpressionSelectionModifier(expression='defect==0')
+    node_bad.modifiers.append(modifertemp)
+    data_bda=node_bad.compute()
+    bcc_num=data_bda.attributes['ExpressionSelection.count']
+    bcc_num_per=bcc_num/data_bda.particles.count
+    node_bad.modifiers.remove(modifertemp)
+
+    modifertemp=ExpressionSelectionModifier(expression='defect==1')
+    node_bad.modifiers.append(modifertemp)
+    data_bda=node_bad.compute()
+    surface_num=data_bda.attributes['ExpressionSelection.count']
+    surface_num_per=surface_num/data_bda.particles.count
+    node_bad.modifiers.remove(modifertemp)
+
+    modifertemp=ExpressionSelectionModifier(expression='defect==2')
+    node_bad.modifiers.append(modifertemp)
+    data_bda=node_bad.compute()
+    vacancy_num=data_bda.attributes['ExpressionSelection.count']
+    vacancy_num_per=vacancy_num/data_bda.particles.count
+    node_bad.modifiers.remove(modifertemp)
+
+    modifertemp=ExpressionSelectionModifier(expression='defect==3')
+    node_bad.modifiers.append(modifertemp)
+    data_bda=node_bad.compute()
+    dislocation_num=data_bda.attributes['ExpressionSelection.count']
+    dislocation_num_per=dislocation_num/data_bda.particles.count
+    node_bad.modifiers.remove(modifertemp)
+
+    modifertemp=ExpressionSelectionModifier(expression='defect==4')
+    node_bad.modifiers.append(modifertemp)
+    data_bda=node_bad.compute()
+    twin_num=data_bda.attributes['ExpressionSelection.count']
+    twin_num_per=twin_num/data_bda.particles.count
+    node_bad.modifiers.remove(modifertemp)
+
+    modifertemp=ExpressionSelectionModifier(expression='defect==5')
+    node_bad.modifiers.append(modifertemp)
+    data_bda=node_bad.compute()
+    planar_fault_num=data_bda.attributes['ExpressionSelection.count']
+    planar_fault_num_per=planar_fault_num/data_bda.particles.count
+    node_bad.modifiers.remove(modifertemp)
+
+    modifertemp=ExpressionSelectionModifier(expression='defect==6')
+    node_bad.modifiers.append(modifertemp)
+    data_bda=node_bad.compute()
+    other_num=data_bda.attributes['ExpressionSelection.count']
+    other_num_per=other_num/data_bda.particles.count
+    node_bad.modifiers.remove(modifertemp)
+    
+    print(data_bda.particles.count)
+
+
+    #导出结果到文件
+    with open('./bda_data.dat','a+') as f:
+        f.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(\
+            timestep,bcc_num,bcc_num_per,surface_num,surface_num_per,vacancy_num,vacancy_num_per,\
+                dislocation_num,dislocation_num_per,twin_num,twin_num_per,planar_fault_num,planar_fault_num_per,\
+                    other_num,other_num_per))
+
+
+
+# print(list(data.particles.keys()))
+#os.system("atomsk.exe output.40.data imd")
+# os.system("python ovitos_bcc-defect-analysis.py -c output.40.imd -a 3.165 -b 1 1 0 -i")
+
+print(data.attributes)
+print(data_bda.attributes)
+
+print(ovito.version)
+
+print(node)
+```
