@@ -389,7 +389,7 @@ Ready-to-use PP tables are available [here](https://pseudopotentials.quantum-esp
 
 <font size="4" color="red"><b>这是红色加粗的大号字体</b></font>
 
-```
+```python
 # Import OVITO modules.
 import ovito
 from ovito.data import *
