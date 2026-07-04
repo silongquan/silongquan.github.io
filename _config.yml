@@ -226,3 +226,8 @@ jekyll-archives:
 
 plugins:
   - jekyll-sitemap
+
+highlight:
+  enable: true
+#  line_number: true
+  fold: true  # 确认是否开启折叠功能
