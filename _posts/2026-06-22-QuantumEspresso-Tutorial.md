@@ -564,7 +564,7 @@ print(node)
 
 测试  
 
-    ```python
+```python
     import os
     import openai
 
@@ -605,5 +605,5 @@ print(node)
     print("AI:", get_ai_response("Hello, can you help me?"))
     user_input = input("User: ")
     print("AI:", get_ai_response(user_input))
-    ```
+```
 
