@@ -561,5 +561,47 @@ print(ovito.version)
 
 print(node)
 ```
-<p class="collapsible-trigger">展开/收起</p>
+
+    ```python
+    import os
+    import openai
+
+    # 设置 API 参数
+    openai.api_type = "azure"
+    openai.api_base = ""  # 在此处填写 Azure 的 API 基地址
+    openai.api_version = "2023-07-01-preview"
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+
+    # 初始化对话历史
+    conversation_history = [
+        {"role": "system", "content": "You are an AI assistant that helps people find information."}
+    ]
+
+    def get_ai_response(message):
+        # 将用户消息添加到对话历史
+        conversation_history.append({"role": "user", "content": message})
+
+        # 调用 AI 完成 API
+        completion = openai.ChatCompletion.create(
+            engine="gpt-4-turbo",
+            messages=conversation_history,
+            temperature=0.7,
+            max_tokens=800,
+            top_p=0.95,
+            frequency_penalty=0,
+            presence_penalty=0,
+            stop=None
+        )
+
+        # 将 AI 回复添加到对话历史
+        ai_response = completion.choices[0].message['content']
+        conversation_history.append({"role": "assistant", "content": ai_response})
+
+        return ai_response
+
+    # 示例对话
+    print("AI:", get_ai_response("Hello, can you help me?"))
+    user_input = input("User: ")
+    print("AI:", get_ai_response(user_input))
+    ```
 
