@@ -386,14 +386,13 @@ Ready-to-use PP tables are available [here](https://pseudopotentials.quantum-esp
 ### 4.3 Quantum ESPRESSO计算流程
 
 
-
-    <font size="4" color="red"><b>这是红色加粗的大号字体</b></font>
-
+<font size="4" color="red"><b>这是红色加粗的大号字体</b></font>
 
 
-    测试  
 
-    ```python
+测试  
+
+~~~python
     import os
     import openai
 
@@ -434,5 +433,5 @@ Ready-to-use PP tables are available [here](https://pseudopotentials.quantum-esp
     print("AI:", get_ai_response("Hello, can you help me?"))
     user_input = input("User: ")
     print("AI:", get_ai_response(user_input))
-    ```
+~~~
 
