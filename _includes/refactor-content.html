@@ -25,7 +25,7 @@
 -->
 {% if _content contains '<div class="language-' and '<div class="content">'%}
   {% assign _content = _content
-    | replace: 'highlighter-rouge', 'highlighter-rouge collapsible-container'
+    | replace: 'highlighter-rouge collapsible-container', 'highlighter-rouge collapsible-container collapsible-container'
     | replace: '<div class="content">', '<script src="/assets/js/dist/collapsible.js"></script><div class="content">' 
   %}
 {% endif %}
