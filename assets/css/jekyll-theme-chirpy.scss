@@ -25,6 +25,28 @@
 }
 
 
+/* 为代码展示框设置滚动条样式，仅针对WebKit浏览器 */
+ .collapsible-content::-webkit-scrollbar {
+ width: 8px; /* 滚动条宽度 */
+ height: 8px; /* 滚动条高度（对于水平滚动条） */
+ }
+
+ .collapsible-content::-webkit-scrollbar-thumb {
+ background-color: rgba(0, 0, 0, 0.2); /* 滚动条滑块颜色 */
+ border-radius: 6px; /* 滚动条滑块圆角 */
+ }
+
+ .collapsible-content::-webkit-scrollbar-thumb:hover {
+ background-color: rgba(0, 0, 0, 0.3); /* 滚动条滑块鼠标悬停颜色 */
+ }
+
+ .collapsible-content::-webkit-scrollbar-track {
+ background-color: #f1f1f1; /* 滚动条轨道颜色 */
+ border-radius: 6px; /* 滚动条轨道圆角 */
+ }
+
+
+
 /* ---- 强制可横向滚动并让代码宽度由内容决定 ---- */
 .collapsible-content {
   overflow-x: auto !important;
