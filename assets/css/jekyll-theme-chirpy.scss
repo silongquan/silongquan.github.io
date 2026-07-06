@@ -24,3 +24,32 @@
    font-size: small;
 }
 
+
+/* ---- 可折叠代码块：保证横向滚动和代码宽度由内容决定 ---- */
+.collapsible-content {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch; /* 移动端平滑滚动 */
+}
+
+/* 让内部代码块不被压缩或强制换行，触发父容器的横向滚动 */
+.collapsible-content pre,
+.collapsible-content code,
+.collapsible-content .highlight,
+.collapsible-content .highlight > code {
+  display: block;
+  white-space: pre;          /* 保留原始空白和换行，不折行 */
+  min-width: max-content;    /* 宽度至少为内容需要的宽度（触发父容器横向滚动） */
+  max-width: none;
+  overflow: visible;
+  box-sizing: border-box;
+}
+
+/* 可选：如果希望在窄屏上允许换行以减少横向滚动，启用下面这段（注释掉上面的 pre 规则之一）：
+.collapsible-content pre,
+.collapsible-content code,
+.collapsible-content .highlight {
+  white-space: pre-wrap;     / * 保留空白但允许换行 * /
+  word-break: break-word;    / * 防止超长无空格字符串撑破布局 * /
+}
+*/
