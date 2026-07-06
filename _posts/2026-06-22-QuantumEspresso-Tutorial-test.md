@@ -22,24 +22,21 @@ tags: [QE, DFT, AIMD]
 ## 2 新建个人文件夹和工作目录
 
 登陆服务器后，先新建自己的`个人文件夹`，以后所有的操作和计算在新建的个人文件夹中进行，如我以自己的姓名拼音新建个人文件夹「quansilong/」。新建个人文件夹后，进入`个人文件夹`（如「quansilong/」）. 
-
-	```bash
-	msmcquan@inspur-NF5468M5:~$ mkdir quansilong
-	msmcquan@inspur-NF5468M5:~$ ll
-	total 4
-	drwxr-xr-x 3 msmcquan quansilong 4096 6月  15 10:39 quansilong/
-	msmcquan@inspur-NF5468M5:~$ cd quansilong/
-	msmcquan@inspur-NF5468M5:~/quansilong$ pwd
-	/home/msmcquan/quansilong
-	```
-
-在`个人文件夹`（如「quansilong/」）中新建`工作目录`（如「LiFePO4-c-010-QE/」），并进入`工作目录「LiFePO4-c-010-QE/`。此教程将以计算 $LiFePO_4$的电子结构为例。
-
 ```bash
-	msmcquan@inspur-NF5468M5:~/quansilong$ mkdir LiFePO4-c-010-QE
-	msmcquan@inspur-NF5468M5:~/quansilong$ cd LiFePO4-c-010-QE/
-	msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ pwd
-	/home/msmcquan/quansilong/LiFePO4-c-010-QE
+  	msmcquan@inspur-NF5468M5:~$ mkdir quansilong
+  	msmcquan@inspur-NF5468M5:~$ ll
+  	total 4
+  	drwxr-xr-x 3 msmcquan quansilong 4096 6月  15 10:39 quansilong/
+  	msmcquan@inspur-NF5468M5:~$ cd quansilong/
+  	msmcquan@inspur-NF5468M5:~/quansilong$ pwd
+  	/home/msmcquan/quansilong
+```
+在`个人文件夹`（如「quansilong/」）中新建`工作目录`（如「LiFePO4-c-010-QE/」），并进入`工作目录「LiFePO4-c-010-QE/`。此教程将以计算 $LiFePO_4$的电子结构为例。
+```bash
+msmcquan@inspur-NF5468M5:~/quansilong$ mkdir LiFePO4-c-010-QE
+msmcquan@inspur-NF5468M5:~/quansilong$ cd LiFePO4-c-010-QE/
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ pwd
+/home/msmcquan/quansilong/LiFePO4-c-010-QE
 ```
 
 
@@ -47,14 +44,13 @@ tags: [QE, DFT, AIMD]
 `PBS（Protable Batch System）`是功能最为齐全，历史最悠久，支持最广泛的本地集群调度器之一。 PBS的目前包括OpenPBS，PBS Pro和Torque三个主要分支。其中OpenPBS是最早的PBS系统，目前已经没有太多后续开发，PBS pro是PBS的商业版本，功能最为丰富。`Torque`是Clustering公司接过了OpenPBS，并给与后续支持的一个开源版本。
   
 `Torque`作为一款开源免费的PBS排队管理系统，被许多使用服务器和集群的小组广泛使用。课题组服务器上已经部署好 `Torque PBS`任务排队管理系统。PBS队列系统提交脚本 `runqe-pw.pbs`我已写好，已上传到我的个人文件夹中。
-  
-    ```bash
-    msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ ll ..
-    total 12
-    drwxr-xr-x 2 msmcquan quansilong 4096 6月  24 09:39 LiFePO4-c-010-2x1x2-vac-QE/
-    drwxr-xr-x 2 msmcquan quansilong 4096 6月  24 09:40 LiFePO4-c-010-QE/
-    -rw-r--r-- 1 msmcquan quansilong  889 6月  24 15:20 runqe-pw.pbs
-    ```
+```bash
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ ll ..
+total 12
+drwxr-xr-x 2 msmcquan quansilong 4096 6月  24 09:39 LiFePO4-c-010-2x1x2-vac-QE/
+drwxr-xr-x 2 msmcquan quansilong 4096 6月  24 09:40 LiFePO4-c-010-QE/
+-rw-r--r-- 1 msmcquan quansilong  889 6月  24 15:20 runqe-pw.pbs
+```
   
 计算时，需要将PBS队列系统提交脚本 `runqe-pw.pbs`复制到自己计算的工作目录。如本教程中，需要将PBS队列系统提交脚本 `runqe-pw.pbs`复制到工作目录 `LiFePO4-c-010-QE/`中。
   
