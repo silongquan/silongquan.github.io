@@ -20,7 +20,7 @@ tags: [QE, DFT, AIMD]
 
 
 ## 2 新建个人文件夹和工作目录
-登陆服务器后，先新建自己的`个人文件夹`，以后所有的操作和计算在新建的个人文件夹中进行，如我以自己的姓名拼音新建个人文件夹「quansilong/」。新建个人文件夹后，进入`个人文件夹`（如「quansilong/」）. 
+    登陆服务器后，先新建自己的`个人文件夹`，以后所有的操作和计算在新建的个人文件夹中进行，如我以自己的姓名拼音新建个人文件夹「quansilong/」。新建个人文件夹后，进入`个人文件夹`（如「quansilong/」）. 
 
     ```bash
     msmcquan@inspur-NF5468M5:~$ mkdir quansilong
@@ -32,7 +32,7 @@ tags: [QE, DFT, AIMD]
     /home/msmcquan/quansilong
     ```
   
-在`个人文件夹`（如「quansilong/」）中新建`工作目录`（如「LiFePO4-c-010-QE/」），并进入`工作目录「LiFePO4-c-010-QE/`。此教程将以计算 $LiFePO_4$的电子结构为例。
+    在`个人文件夹`（如「quansilong/」）中新建`工作目录`（如「LiFePO4-c-010-QE/」），并进入`工作目录「LiFePO4-c-010-QE/`。此教程将以计算 $LiFePO_4$的电子结构为例。
   
     ```bash
     msmcquan@inspur-NF5468M5:~/quansilong$ mkdir LiFePO4-c-010-QE
