@@ -375,6 +375,17 @@ Structure of the input data:
    /
 ```
 
+- `dos.x`输入文件结构如下，具体参考 `dos.x`手册（[https://www.quantum-espresso.org/Doc/INPUT_PW.html](https://www.quantum-espresso.org/Doc/INPUT_PW.html)）：
+
+```
+
+```
+
+- `pp.x`输入文件结构如下，具体参考 `pp.x`手册（[https://www.quantum-espresso.org/Doc/INPUT_PW.html](https://www.quantum-espresso.org/Doc/INPUT_PW.html)）：
+
+```
+
+```
 
 #### 4.2.2 Quantum ESPRESSO赝势
 Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) pseudopotentials (PPs) and Norm-Conserving (NC) PPs in separable (Kleinman-Bylander) form. Some calculations (e.g. meta-GGA functionals, Gamma-only phonon, third-order energy derivatives: Raman, anharmonic force constants) work only with NC PPs; CP does not yet support PAW.
