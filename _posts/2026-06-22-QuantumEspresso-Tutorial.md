@@ -15,7 +15,7 @@ tags: [QE, DFT, AIMD]
 - 点击「打开」，选中刚刚新建的连接会话，点击「连接」登录服务器;
 ![主题](/assets/image/2026-06-22/2.png)
 
-- 点击工具栏Xftp图标启动Xftp文件传输工具，窗口左侧为本地文件目录，右侧为服务器文件目录。
+- 点击工具栏Xftp图标启动Xftp文件传输工具，窗口左侧为本地文件目录，右侧为服务器文件目录，左右文件可以互传。
 ![主题](/assets/image/2026-06-22/3.png)
 
 
@@ -375,16 +375,63 @@ Structure of the input data:
    /
 ```
 
-- `dos.x`输入文件结构如下，具体参考 `dos.x`手册（[https://www.quantum-espresso.org/Doc/INPUT_PW.html](https://www.quantum-espresso.org/Doc/INPUT_PW.html)）：
+- `dos.x`输入文件结构如下，具体参考 `dos.x`手册（[https://www.quantum-espresso.org/Doc/INPUT_DOS.html](https://www.quantum-espresso.org/Doc/INPUT_DOS.html)）：
 
 ```
+Purpose of dos.x:
+    calculates the Density of States (DOS)
+    (separated into up and down components for DSDA)
 
+
+Structure of the input data:
+============================
+
+   &DOS
+     ...
+   /
+
+IMPORTANT: since v.5 namelist name is &DOS and no longer &INPUTPP
 ```
 
-- `pp.x`输入文件结构如下，具体参考 `pp.x`手册（[https://www.quantum-espresso.org/Doc/INPUT_PW.html](https://www.quantum-espresso.org/Doc/INPUT_PW.html)）：
+- `pp.x`输入文件结构如下，具体参考 `pp.x`手册（[https://www.quantum-espresso.org/Doc/INPUT_PP.html](https://www.quantum-espresso.org/Doc/INPUT_PP.html)）：
 
 ```
+Purpose of pp.x: data analysis and plotting.
 
+The code performs two steps:
+
+(1) reads the output produced by pw.x, extracts and calculates
+    the desired quantity/quantities (rho, V, ...)
+
+(2) writes the desired quantity to file in a suitable format for
+    various types of plotting and various plotting programs
+
+The input data of this program is read from standard input
+or from file and has the following format:
+
+NAMELIST &INPUTPP
+   containing the variables for step (1), followed by
+
+NAMELIST &PLOT
+   containing the variables for step (2)
+
+The two steps can be performed independently. In order to perform
+only step (2), leave namelist &INPUTPP blank. In order to perform
+only step (1), do not specify namelist &PLOT
+
+Intermediate results from step 1 can be saved to disk (see
+variable filplot in &INPUTPP) and later read in step 2.
+Since the file with intermediate results is formatted, it
+can be safely transferred to a different machine. This
+also allows plotting of a linear combination (for instance,
+charge differences) by saving two intermediate files and
+combining them (see variables weight and filepp in &PLOT)
+
+All output quantities are in ATOMIC (RYDBERG) UNITS unless
+otherwise explicitly specified.
+All charge densities integrate to the NUMBER of electrons
+not to the total charge.
+All potentials have the dimension of an energy (e*V, not V).
 ```
 
 #### 4.2.2 Quantum ESPRESSO赝势
