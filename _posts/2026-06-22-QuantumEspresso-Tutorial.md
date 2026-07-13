@@ -255,7 +255,7 @@ eigenstate = 1, 2, 3, ..., 10 (d-shell)
 Check Doc/Hubbard_input.pdf for more details. ]
 ```
 
-`pw.x`的输入文件可以借助[`Quantum ESPRESSO input generator and structure visualizer`](https://qeinputgenerator.materialscloud.io/)和[QEtoolkit](https://www.densityflow.com/)中[`cif转为pw.x输入文件`](https://www.densityflow.com/cif2qe.php)在线工具产生，然后根据需要进行稍微修改。例如， $LiFePO_4$ (变胞)结构优化的输入文件如下：
+`pw.x`的输入文件可以借助[`Quantum ESPRESSO input generator and structure visualizer`](https://qeinputgenerator.materialscloud.io/)和[QEtoolkit](https://www.densityflow.com/)中[`cif转为pw.x输入文件`](https://www.densityflow.com/cif2qe.php)在线工具产生，然后根据需要进行稍微修改。例如， $ LiFePO_4 $ (变胞)结构优化的输入文件如下：
 
 ```
  &CONTROL
