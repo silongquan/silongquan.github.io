@@ -1,5 +1,5 @@
 ---
-title:  Quantum Espresso install
+title:  Quantum Espresso 编译安装
 date: 2026-07-15 10:00:00 +0800
 categories: [Research]
 tags: [QE, DFT, AIMD]
