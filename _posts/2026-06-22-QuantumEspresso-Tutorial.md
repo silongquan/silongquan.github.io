@@ -340,7 +340,7 @@ Check Doc/Hubbard_input.pdf for more details. ]
 ```
 
 
-- `bands.x`输入文件结构如下，具体参考 `bands.x`手册([https://www.quantum-espresso.org/Doc/INPUT_BANDS.html](https://www.quantum-espresso.org/Doc/INPUT_BANDS.html)):
+- `bands.x`(band structure postprocessing)输入文件结构如下，具体参考 `bands.x`手册([https://www.quantum-espresso.org/Doc/INPUT_BANDS.html](https://www.quantum-espresso.org/Doc/INPUT_BANDS.html)):
 
 ```
 Purpose of bands.x:
@@ -375,7 +375,18 @@ Structure of the input data:
    /
 ```
 
-- `dos.x`输入文件结构如下，具体参考 `dos.x`手册（[https://www.quantum-espresso.org/Doc/INPUT_DOS.html](https://www.quantum-espresso.org/Doc/INPUT_DOS.html)）：
+具体 `bands.x`输入文件如下:
+
+```
+&BANDS
+prefix='LiFePO4-c-010',
+outdir='tmp'
+filband='bd.dat'
+lp=.true.
+/
+```
+
+- `dos.x`(DOS postprocessing)输入文件结构如下，具体参考 `dos.x`手册（[https://www.quantum-espresso.org/Doc/INPUT_DOS.html](https://www.quantum-espresso.org/Doc/INPUT_DOS.html)）：
 
 ```
 Purpose of dos.x:
@@ -391,6 +402,19 @@ Structure of the input data:
    /
 
 IMPORTANT: since v.5 namelist name is &DOS and no longer &INPUTPP
+```
+
+具体 `dos.x`输入文件如下:
+
+```
+&DOS 
+ prefix='LiFePO4-c-010',
+ outdir='tmp'
+ ngauss=1
+ degauss=1.5d-2
+ DeltaE=1.0d-2
+ fildos='LiFePO4-c-010.dos'
+/
 ```
 
 - `pp.x`输入文件结构如下，具体参考 `pp.x`手册（[https://www.quantum-espresso.org/Doc/INPUT_PP.html](https://www.quantum-espresso.org/Doc/INPUT_PP.html)）：
@@ -432,6 +456,24 @@ otherwise explicitly specified.
 All charge densities integrate to the NUMBER of electrons
 not to the total charge.
 All potentials have the dimension of an energy (e*V, not V).
+```
+
+具体获取电荷密度并写入到cube文件的 `pp.x`输入文件如下:
+
+```
+&INPUTPP
+prefix='LiFePO4-c-010'
+outdir='tmp'
+plot_num = 0
+/
+&PLOT
+iflag = 3
+output_format= 6
+fileout = 'LiFePO4-c-010_rho.cube'
+nx = 32
+ny = 32
+nz = 32
+/
 ```
 
 #### 4.2.2 Quantum ESPRESSO赝势
