@@ -480,7 +480,11 @@ nz = 32
 Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) pseudopotentials (PPs) and Norm-Conserving (NC) PPs in separable (Kleinman-Bylander) form. Some calculations (e.g. meta-GGA functionals, Gamma-only phonon, third-order energy derivatives: Raman, anharmonic force constants) work only with NC PPs; CP does not yet support PAW.
 
 赝势一般名命规则如下图所示:
-![naming-PPs](/assets/image/2026-06-22/naming-PPs.png =80)
+<-- ![naming-PPs](/assets/image/2026-06-22/naming-PPs.png) -->
+<img src="/assets/image/2026-06-22/naming-PPs.png" 
+     alt="naming-PPs" 
+     width="80%" 
+     style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
 
 - An excellent resource for PPs is Standard Solid State PPs ([SSSP](https://legacy.materialscloud.org/discover/sssp/table/efficiency)), a collection of the best verified PPs, maintained by THEOS and MARVEL on the [Materials Cloud](https://www.materialscloud.org/).（**无特殊要求,建议采用[SSSP](https://legacy.materialscloud.org/discover/sssp/table/efficiency)赝势**）
 
