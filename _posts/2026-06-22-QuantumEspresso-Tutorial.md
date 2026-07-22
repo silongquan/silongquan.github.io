@@ -494,10 +494,43 @@ Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) 
 
 #### 4.3.1 计算模型构建
 
+在使用 Quantum ESPRESSO 进行计算之前，必须首先建立合理的计算模型。计算模型的质量直接决定了后续计算的可靠性与结果的物理意义。模型构建主要有两种途径：**网上下载**现有结构文件与**自己构建**结构模型。
+
 - 网上下载
 
+  网上下载是最常见且高效的方式，尤其适用于已有实验测定或数据库收录的晶体结构。
+
+  常用数据库：
+
+  [Materials Project](https://next-gen.materialsproject.org/)：提供大量晶体结构的 CIF 文件，包含能量、带隙、磁性等信息。
+  
+  [AFLOW](https://aflow.org/)：自动化材料数据库，涵盖高通量计算结果。
+  
+  [COD](https://www.crystallography.net/cod/index.php)：开放晶体学数据库，收录实验测定的晶体结构。
+  
+  ICSD（Inorganic Crystal Structure Database）：付费数据库，数据量庞大，精度高。
+
+  | 特点 | **[COD](ca://s?q=Crystallography_Open_Database)** | **[Materials Project](ca://s?q=Materials_Project_结构下载)** | **[AFLOW](ca://s?q=AFLOW_数据库)** |
+  | --- | --- | --- | --- |
+  | 数据规模 | 45 万+ 实验结构 | 15 万+ DFT 优化结构 | 390 万+ 高通量计算结构 |
+  | 数据来源 | 实验测定 (XRD/ND) | DFT + 部分实验 | 高通量 DFT 自动计算 |
+  | 文件格式 | CIF | CIF、POSCAR、JSON | CIF、JSON、API 输出 |
+  | 特点 | 免费开放，实验数据为主 | 与实验结合紧密，界面友好 | 丰富的力学/热学性质 |
+  | 适用场景 | 单个实验结构研究 | 理论与实验结合 | 批量筛选与性质预测 |
+
+  在网上数据库中找到所需的材料,一般下载其对应cif格式文件,或者可转为Quantum ESPRESSO计算输入文件的其他格式文件。
   
 - 自己构建
+
+  当数据库中没有目标材料，或需要研究特殊结构（如缺陷、掺杂、表面、界面），就需要自己构建模型。构建这些特殊结构常用工具有：
+
+  VESTA：可视化与建模工具，支持晶体结构编辑。
+  
+  ASE (Atomic Simulation Environment)：Python 库，可编程生成复杂结构。
+  
+  Materials Studio：商业软件，功能强大，适合复杂建模。
+
+  采用以上工具构建包含如缺陷、掺杂、表面、界面等特殊结构模型,导出为cif格式文件,或者可转为Quantum ESPRESSO计算输入文件的其他格式文件。
 
 #### 4.3.2 结构优化
 
