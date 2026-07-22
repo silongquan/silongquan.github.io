@@ -492,6 +492,21 @@ Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) 
 
 ### 4.3 Quantum ESPRESSO计算流程
 
+#### 4.3.1 计算模型构建
+
+- 网上下载
+
+  
+- 自己构建
+
+#### 4.3.2 结构优化
+
+
+#### 4.3.3 自洽计算
+
+
+#### 4.3.4 非自洽计算
+
 
 <font size="4" color="red"><b>这是红色加粗的大号字体</b></font>
 
