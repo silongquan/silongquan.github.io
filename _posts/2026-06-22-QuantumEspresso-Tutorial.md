@@ -496,21 +496,21 @@ Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) 
 
 在使用 Quantum ESPRESSO 进行计算之前，必须首先建立合理的计算模型。计算模型的质量直接决定了后续计算的可靠性与结果的物理意义。模型构建主要有两种途径：**网上下载**现有结构文件与**自己构建**结构模型。
 
-- 网上下载
+- **网上下载**
 
   网上下载是最常见且高效的方式，尤其适用于已有实验测定或数据库收录的晶体结构。
 
   常用数据库：
 
-  [Materials Project](https://next-gen.materialsproject.org/)：提供大量晶体结构的 CIF 文件，包含能量、带隙、磁性等信息。
+  **[Materials Project](https://next-gen.materialsproject.org/)**：提供大量晶体结构的 CIF 文件，包含能量、带隙、磁性等信息。
   
-  [AFLOW](https://aflow.org/)：自动化材料数据库，涵盖高通量计算结果。
+  **[AFLOW](https://aflow.org/)**：自动化材料数据库，涵盖高通量计算结果。
   
-  [COD](https://www.crystallography.net/cod/index.php)：开放晶体学数据库，收录实验测定的晶体结构。
+  **[COD](https://www.crystallography.net/cod/index.php)**：开放晶体学数据库，收录实验测定的晶体结构。
   
-  ICSD（Inorganic Crystal Structure Database）：付费数据库，数据量庞大，精度高。
+  **ICSD（Inorganic Crystal Structure Database）**：付费数据库，数据量庞大，精度高。
 
-  | 特点 | **[COD](ca://s?q=Crystallography_Open_Database)** | **[Materials Project](ca://s?q=Materials_Project_结构下载)** | **[AFLOW](ca://s?q=AFLOW_数据库)** |
+  | 特点 | **[COD](https://www.crystallography.net/cod/index.php)** | **[Materials Project](https://next-gen.materialsproject.org/)** | **[AFLOW](https://aflow.org/)** |
   | --- | --- | --- | --- |
   | 数据规模 | 45 万+ 实验结构 | 15 万+ DFT 优化结构 | 390 万+ 高通量计算结构 |
   | 数据来源 | 实验测定 (XRD/ND) | DFT + 部分实验 | 高通量 DFT 自动计算 |
@@ -520,19 +520,51 @@ Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) 
 
   在网上数据库中找到所需的材料,一般下载其对应cif格式文件,或者可转为Quantum ESPRESSO计算输入文件的其他格式文件。
   
-- 自己构建
+- **自己构建**
 
   当数据库中没有目标材料，或需要研究特殊结构（如缺陷、掺杂、表面、界面），就需要自己构建模型。构建这些特殊结构常用工具有：
 
-  VESTA：可视化与建模工具，支持晶体结构编辑。
+  **VESTA**：可视化与建模工具，支持晶体结构编辑。
   
-  ASE (Atomic Simulation Environment)：Python 库，可编程生成复杂结构。
+  **ASE (Atomic Simulation Environment)**：Python 库，可编程生成复杂结构。
   
-  Materials Studio：商业软件，功能强大，适合复杂建模。
+  **Materials Studio**：商业软件，功能强大，适合复杂建模。
 
   采用以上工具构建包含如缺陷、掺杂、表面、界面等特殊结构模型,导出为cif格式文件,或者可转为Quantum ESPRESSO计算输入文件的其他格式文件。
 
 #### 4.3.2 结构优化
+
+  pw.x处理的计算包括以下7种类型，在输入文件中用calculation设置：
+  
+  'scf'：自洽计算，self-consistent field，通过迭代的方式数值求解微分-积分方程（Kohn-Sham方程），迭代收敛以电荷的变化足够小为准，最终得到自洽电荷。
+  
+  'nscf'：非自洽计算，scf计算常在k空间的网格上进行，网格要足够密以完成k空间上的积分，在DOS等计算需要更密的k
+  点，这时在自洽电荷基础上，计算这些更多的k
+  点，nscf计算保持自洽电荷不变。
+  
+  'bands'：也是一种nscf计算，k
+  点按照三维k空间中的特殊路径选取。
+  
+  'relax'：一系列scf计算，通过Hellman-Feynman力计算离子坐标驰豫（通过优化算法找到受力为零的结构），relax计算时固定cell不变。
+  
+  'vc-relax': 允许cell变化的relax，通过应力的计算改变cell。
+  
+  'md'：分子动力学，将电子对离子的作用看成离子感受到的势，根据势能和离子初始速度求解离子运动的经典力学方程。
+  
+  'vc-md'：允许cell改变的md。
+
+  pw.x的输入说明见INPUT_PW。注意默认的单位，其中原子单位制为（以下数值见源程序qe-7.5/Modules/constants.f90）：
+
+  ```
+  1 bohr = 1 a.u. (atomic unit) = 0.52917720859 angstroms.
+  1 Rydberg (Ry) = 13.60569193 eV
+  ```
+
+  关于输入文件，还需要注意其中不能含有制表符等不可打印字符，这些字符可能会在excel文件复制粘贴过程中产生，并且在文本编辑器不可见，非常隐蔽。
+  
+  pw.x的初始晶体结构及晶格参数通常是实验值。但是，为了后续的计算可能需要通过力和应力的弛豫（vc-relax）得到晶格参数的理论值（如果只计算体材料能带，而所关心的问题只限于电子性质而无关晶格，使用实验值也是可以的）。
+  
+  在结构驰豫（calculation='relax'）过程中，ATOMIC_POSITIONS是根据力而变化的，如果是vc-relax，原子坐标改变的同时，CELL_PARAMETERS根据应力变化（celldm在relax时是不变的）。
 
 
 #### 4.3.3 自洽计算
