@@ -46,9 +46,21 @@ tags: [QE, DFT, AIMD]
   最后提示配置成功即可。
   
   (3) 编译  
-  编译所有子程序：make all （仅编译pw：make pw）  
-  需编译epw，执行：make epw  
-  编译wannier90报错，可能是wannier90第三方安装包无法下载或者下载不完全，解决方法：可本地手动下载wannier90源码，然后改名为 `v3.1.0`并上传到Quantum ESPRESSO根目录下 `archive/`目录下，再重新编译！
+  编译所有子程序：
+  ```bash
+  make all
+  ```
+  仅编译pw：
+  ```bash
+  make pw
+  ```
+  需编译epw，执行：
+  ```bash
+  make epw
+  ```
+   
+  编译wannier90报错，可能是wannier90第三方安装包无法下载或者下载不完全，解决方法：  
+  可本地手动下载wannier90源码，然后改名为 `v3.1.0`并上传到Quantum ESPRESSO根目录下 `archive/`目录下，再重新编译！
   ```bash
   msmcquan@inspur-NF5468M5:/home/quansilong/soft/qe-7.5/archive$ pwd
   /home/quansilong/soft/qe-7.5/archive
@@ -73,8 +85,8 @@ tags: [QE, DFT, AIMD]
   进入文件夹：cd test-suite/  
   串行测试：make run-tests-pw-serial（中途可 Ctrl+C 中断）  
   并行测试：make run-tests-pw-parallel（中途可 Ctrl+C 中断）  
-  串行运行：/opt/qe-7.3.1/bin/pw.x < test.in > test.out  
-  并行运行：mpirun -np 4 /opt/qe-7.3.1/bin/pw.x < test.in > test.out  
+  串行运行：pw.x < test.in > test.out  
+  并行运行：mpirun -np 4 pw.x < test.in > test.out  
   
   (6) 说明  
   特别说明：make 编译的时间可能会有点长，可能会超过一个小时，需要耐心等待。可以通过命令放置于后台运行：nohup make all & 。使用 ps -ef|grep make\ all 命令查看是否编译完成，或者查看 nohup.out 文件来判断。  
