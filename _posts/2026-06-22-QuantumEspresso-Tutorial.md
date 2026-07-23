@@ -566,10 +566,10 @@ Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) 
 
 
 
-下载**[SSSP](https://legacy.materialscloud.org/discover/sssp/table/efficiency)**,将Li、Fe、P和O元素的赝势复制并上传到工作目录.
+下载**[SSSP](https://legacy.materialscloud.org/discover/sssp/table/efficiency)赝势**,将Li、Fe、P和O元素的赝势复制并上传到工作目录.
 
 
-结构优化输入文件 `LiFePO4-c-010-1-vcrelax.in`
+结构优化输入文件 `LiFePO4-c-010-1-vcrelax.in`如下:
 ```
  &CONTROL
    calculation     = 'vc-relax'
@@ -652,7 +652,7 @@ Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) 
  5 2 4 0 0 0
 ```
 
-后台运行命令及结果查看如下:
+后台运行命令及运行状态查看如下:
 ```
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 pw.x < LiFePO4-c-010-1-vcrelax.in > LiFePO4-c-010-1-vcrelax.out &
 [1] 3785504
@@ -687,7 +687,6 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-1-
 
      iteration # 11     ecut=    90.00 Ry     beta= 0.70
      Davidson diagonalization with overlap
-
 ```
 
 
@@ -764,9 +763,14 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ grep '!' LiFePO4-c-010-1
 
 #### 4.3.3 自洽计算
 
-由于pw.x约定：在同一目录，并保持outdir、prefix一致时，先运行vc-relax、relax计算，在接着的scf、nscf、bands计算会读取之前弛豫后的结构，而忽略此时的结构设置。所以，此时做scf计算，修改的地方是：将calculation='vc-relax'改成calculation='scf'，其他部分与上一步输入文件相同。另外，vc-relax和relax计算最后一步包含了最终结构的scf计算，即vc-relax后面可以直接跟着bands计算，所以这里省去这一步骤。
+由于pw.x约定：在同一目录，并保持outdir、prefix一致时，先运行vc-relax、relax计算，在接着的scf、nscf、bands计算会读取之前弛豫后的结构，而忽略此时的结构设置。所以，此时做scf计算，修改的地方是：将calculation='vc-relax'改成calculation='scf'，其他部分与上一步输入文件相同。但是为了确保计算可靠,可将vc-relax计算后的CELL_PARAMETERS和ATOMIC_POSITIONS更新到自洽计算的输入文件。另外，vc-relax和relax计算最后一步包含了最终结构的scf计算，即vc-relax后面可以直接跟着bands计算，可省去自洽计算这一步骤。这里考虑计算严谨性，再进行一次自洽计算。
 
-自洽计算输入文件 `LiFePO4-c-010-2-scf.in`
+复制结构优化的输入文件 `LiFePO4-c-010-1-vcrelax.in`,并重命名为 `LiFePO4-c-010-2-scf.in`:
+```
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ cp LiFePO4-c-010-1-vcrelax.in LiFePO4-c-010-2-scf.in 
+```
+
+接着修改复制的 `LiFePO4-c-010-2-scf.in`中的 `calculation     = 'scf'`、 CELL_PARAMETERS和ATOMIC_POSITIONS标签中的内容。自洽计算输入文件 `LiFePO4-c-010-2-scf.in`如下:
 ```
  &CONTROL
    calculation     = 'scf'
@@ -808,51 +812,163 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ grep '!' LiFePO4-c-010-1
    press_conv_thr  = 0.1
  /
  CELL_PARAMETERS angstrom
-     4.746400000    0.000000000    0.000000000
-     0.000000000    10.443700000    0.000000000
-     0.000000000    0.000000000    6.090200000
+     4.644179108   0.000000000   0.000000000
+     0.000000000   9.829413620   0.000000000
+     0.000000000   0.000000000   5.760239883
  ATOMIC_SPECIES
    Fe 	55.845 	Fe.pbe-spn-kjpaw_psl.0.2.1.UPF
    Li 	6.94 	li_pbe_v1.4.uspp.F.UPF
    O 	15.999 	O.pbe-n-kjpaw_psl.0.1.UPF
    P 	30.974 	P.pbe-n-rrkjus_psl.1.0.0.UPF
  ATOMIC_POSITIONS crystal
-  Li  0.5000000000  0.0000000000  0.0000000000
-  Li  0.0000000000  0.5000000000  0.0000000000
-   O  0.2154900000  0.8345100000  0.0470000000
-   O  0.2845100000  0.3345100000  0.0470000000
-   O  0.2069500000  0.0429300000  0.2500000000
-   O  0.7581300000  0.9032800000  0.2500000000
-   O  0.2930500000  0.5429300000  0.2500000000
-  Fe  0.9752500000  0.2180200000  0.2500000000
-  Fe  0.5247500000  0.7180200000  0.2500000000
-   O  0.7418700000  0.4032800000  0.2500000000
-   P  0.4178200000  0.4052500000  0.2500000000
-   P  0.0821800000  0.9052500000  0.2500000000
-   O  0.2845100000  0.3345100000  0.4530000000
-   O  0.2154900000  0.8345100000  0.4530000000
-  Li  0.5000000000  0.0000000000  0.5000000000
-  Li  0.0000000000  0.5000000000  0.5000000000
-   O  0.7845100000  0.1654900000  0.5470000000
-   O  0.7154900000  0.6654900000  0.5470000000
-  Fe  0.0247500000  0.7819800000  0.7500000000
-   O  0.7069500000  0.4570700000  0.7500000000
-   O  0.2581300000  0.5967200000  0.7500000000
-   P  0.5821800000  0.5947500000  0.7500000000
-  Fe  0.4752500000  0.2819800000  0.7500000000
-   O  0.2418700000  0.0967200000  0.7500000000
-   P  0.9178200000  0.0947500000  0.7500000000
-   O  0.7930500000  0.9570700000  0.7500000000
-   O  0.7845100000  0.1654900000  0.9530000000
-   O  0.7154900000  0.6654900000  0.9530000000
+  Li               0.5000000000       -0.0000000000        0.0000000000
+  Li              -0.0000000000        0.5000000000       -0.0000000000
+  O                0.2251848373        0.8302571768        0.0350782588
+  O                0.2748151627        0.3302571768        0.0350782588
+  O                0.2026896492        0.0517267830        0.2500000000
+  O                0.7478173168        0.9032960055        0.2500000000
+  O                0.2973103508        0.5517267830        0.2500000000
+  Fe               0.9906838255        0.2313056555        0.2500000000
+  Fe               0.5093161745        0.7313056555        0.2500000000
+  O                0.7521826832        0.4032960055        0.2500000000
+  P                0.4206349289        0.4043924090        0.2500000000
+  P                0.0793650711        0.9043924090        0.2500000000
+  O                0.2748151627        0.3302571768        0.4649217412
+  O                0.2251848373        0.8302571768        0.4649217412
+  Li               0.5000000000       -0.0000000000        0.5000000000
+  Li              -0.0000000000        0.5000000000        0.5000000000
+  O                0.7748151627        0.1697428232        0.5350782588
+  O                0.7251848373        0.6697428232        0.5350782588
+  Fe               0.0093161745        0.7686943445        0.7500000000
+  O                0.7026896492        0.4482732170        0.7500000000
+  O                0.2478173168        0.5967039945        0.7500000000
+  P                0.5793650711        0.5956075910        0.7500000000
+  Fe               0.4906838255        0.2686943445        0.7500000000
+  O                0.2521826832        0.0967039945        0.7500000000
+  P                0.9206349289        0.0956075910        0.7500000000
+  O                0.7973103508        0.9482732170        0.7500000000
+  O                0.7748151627        0.1697428232        0.9649217412
+  O                0.7251848373        0.6697428232        0.9649217412
  K_POINTS automatic
  5 2 4 0 0 0
 ```
 
+运行程序及运行状态查看:
+```
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 pw.x < LiFePO4-c-010-2-scf.in > LiFePO4-c-010-2-scf.out &
+[1] 6731
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup: redirecting stderr to stdout
+
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-2-scf.out 
+[inspur-NF5468M5:06731] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+[inspur-NF5468M5:06731] 11 more processes have sent help message help-mpi-btl-openib.txt / no active ports found
+     Checking if some PAW data can be deallocated... 
+
+     total cpu time spent up to now is       10.5 secs
+
+     Self-consistent Calculation
+
+     iteration #  1     ecut=    90.00 Ry     beta= 0.70
+     Davidson diagonalization with overlap
+     ethr =  1.00E-02,  avg # of iterations =  3.1
+
+     total cpu time spent up to now is       38.1 secs
+
+     total energy              =   -2097.04632585 Ry
+     estimated scf accuracy    <       4.86916414 Ry
+
+     iteration #  2     ecut=    90.00 Ry     beta= 0.70
+     Davidson diagonalization with overlap
+     ethr =  2.54E-03,  avg # of iterations =  3.0
+
+     total cpu time spent up to now is       66.3 secs
+```
+
+直到输出以下结果说明计算正常完成:
+```
+     the Fermi energy is    10.4522 ev
+
+!    total energy              =   -2099.41789939 Ry
+     estimated scf accuracy    <          6.2E-09 Ry
+     smearing contrib. (-TS)   =      -0.00000000 Ry
+     internal energy E=F+TS    =   -2099.41789939 Ry
+
+     The total energy is F=E-TS. E is the sum of the following terms:
+     one-electron contribution =    -900.07683686 Ry
+     hartree contribution      =     554.66299622 Ry
+     xc contribution           =    -292.00956819 Ry
+     ewald contribution        =   -1004.98119041 Ry
+     DFT-D3 Dispersion         =      -0.30349728 Ry
+     one-center paw contrib.   =    -456.70980286 Ry
+
+     convergence has been achieved in  14 iterations
+
+     Writing all to output data dir ./tmp/LiFePO4-c-010.save/ :
+     XML data file, charge density, pseudopotentials, collected wavefunctions
+
+     init_run     :      9.32s CPU     10.13s WALL (       1 calls)
+     electrons    :    362.11s CPU    381.98s WALL (       1 calls)
+
+     Called by init_run:
+     wfcinit      :      7.16s CPU      7.49s WALL (       1 calls)
+     potinit      :      0.74s CPU      0.76s WALL (       1 calls)
+     hinit0       :      0.25s CPU      0.26s WALL (       1 calls)
+
+     Called by electrons:
+     c_bands      :    290.62s CPU    300.50s WALL (      14 calls)
+     sum_band     :     47.33s CPU     53.11s WALL (      14 calls)
+     v_of_rho     :      2.42s CPU      2.52s WALL (      15 calls)
+     newd         :     13.68s CPU     18.18s WALL (      15 calls)
+     PAW_pot      :      7.73s CPU      7.73s WALL (      15 calls)
+     mix_rho      :      0.33s CPU      0.35s WALL (      14 calls)
+     energy_dftd3 :      1.26s CPU      1.26s WALL (       1 calls)
+
+     Called by c_bands:
+     init_us_2    :      2.96s CPU      3.00s WALL (     522 calls)
+     cegterg      :    284.67s CPU    294.40s WALL (     252 calls)
+
+     Called by *egterg:
+     cdiaghg      :     31.86s CPU     31.88s WALL (    1500 calls)
+     h_psi        :    182.38s CPU    191.88s WALL (    1518 calls)
+     s_psi        :     16.94s CPU     16.97s WALL (    1518 calls)
+     g_psi        :      0.63s CPU      0.63s WALL (    1248 calls)
+
+     Called by h_psi:
+     h_psi:calbec :     18.60s CPU     19.16s WALL (    1518 calls)
+     vloc_psi     :    145.53s CPU    154.39s WALL (    1518 calls)
+                                        0.00s GPU  (    1518 calls)
+     add_vuspsi   :     17.25s CPU     17.30s WALL (    1518 calls)
+
+     General routines
+     calbec       :     24.21s CPU     24.89s WALL (    1770 calls)
+     fft          :      1.78s CPU      1.89s WALL (     193 calls)
+     ffts         :      0.05s CPU      0.05s WALL (      29 calls)
+     fftw         :    161.88s CPU    171.57s WALL (  203022 calls)
+     interpolate  :      0.17s CPU      0.18s WALL (      15 calls)
+
+     Parallel routines
+
+     PWSCF        :   6m12.21s CPU   6m33.86s WALL
+
+
+   This run was terminated on:  23:13:15  23Jul2026
+```
+
+自洽计算完成后查询费米能级（费米能级一般以scf计算为准）:
+```
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ grep Fermi LiFePO4-c-010-2-scf.out |tail -1
+     the Fermi energy is    10.4522 ev
+```
+
+
 #### 4.3.4 (非自洽)能带计算
 
+复制自洽计算的输入文件 `LiFePO4-c-010-2-scf.in`,并重命名为 `LiFePO4-c-010-3-nscf-b.in`:
+```
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ cp LiFePO4-c-010-2-scf.in LiFePO4-c-010-3-nscf-b.in
+```
 
-能带计算输入文件 `LiFePO4-c-010-3-nscf-b.in`
+接着修改复制的 `LiFePO4-c-010-3-nscf-b.in`中 `calculation     = 'bands'`和K_POINTS标签中的内容。能带计算输入文件 `LiFePO4-c-010-3-nscf-b.in`如下:
 ```
  &CONTROL
    calculation     = 'bands'
@@ -894,43 +1010,43 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ grep '!' LiFePO4-c-010-1
    press_conv_thr  = 0.1
  /
  CELL_PARAMETERS angstrom
-     4.746400000    0.000000000    0.000000000
-     0.000000000    10.443700000    0.000000000
-     0.000000000    0.000000000    6.090200000
+     4.644179108   0.000000000   0.000000000
+     0.000000000   9.829413620   0.000000000
+     0.000000000   0.000000000   5.760239883
  ATOMIC_SPECIES
    Fe 	55.845 	Fe.pbe-spn-kjpaw_psl.0.2.1.UPF
    Li 	6.94 	li_pbe_v1.4.uspp.F.UPF
    O 	15.999 	O.pbe-n-kjpaw_psl.0.1.UPF
    P 	30.974 	P.pbe-n-rrkjus_psl.1.0.0.UPF
  ATOMIC_POSITIONS crystal
-  Li  0.5000000000  0.0000000000  0.0000000000
-  Li  0.0000000000  0.5000000000  0.0000000000
-   O  0.2154900000  0.8345100000  0.0470000000
-   O  0.2845100000  0.3345100000  0.0470000000
-   O  0.2069500000  0.0429300000  0.2500000000
-   O  0.7581300000  0.9032800000  0.2500000000
-   O  0.2930500000  0.5429300000  0.2500000000
-  Fe  0.9752500000  0.2180200000  0.2500000000
-  Fe  0.5247500000  0.7180200000  0.2500000000
-   O  0.7418700000  0.4032800000  0.2500000000
-   P  0.4178200000  0.4052500000  0.2500000000
-   P  0.0821800000  0.9052500000  0.2500000000
-   O  0.2845100000  0.3345100000  0.4530000000
-   O  0.2154900000  0.8345100000  0.4530000000
-  Li  0.5000000000  0.0000000000  0.5000000000
-  Li  0.0000000000  0.5000000000  0.5000000000
-   O  0.7845100000  0.1654900000  0.5470000000
-   O  0.7154900000  0.6654900000  0.5470000000
-  Fe  0.0247500000  0.7819800000  0.7500000000
-   O  0.7069500000  0.4570700000  0.7500000000
-   O  0.2581300000  0.5967200000  0.7500000000
-   P  0.5821800000  0.5947500000  0.7500000000
-  Fe  0.4752500000  0.2819800000  0.7500000000
-   O  0.2418700000  0.0967200000  0.7500000000
-   P  0.9178200000  0.0947500000  0.7500000000
-   O  0.7930500000  0.9570700000  0.7500000000
-   O  0.7845100000  0.1654900000  0.9530000000
-   O  0.7154900000  0.6654900000  0.9530000000
+  Li               0.5000000000       -0.0000000000        0.0000000000
+  Li              -0.0000000000        0.5000000000       -0.0000000000
+  O                0.2251848373        0.8302571768        0.0350782588
+  O                0.2748151627        0.3302571768        0.0350782588
+  O                0.2026896492        0.0517267830        0.2500000000
+  O                0.7478173168        0.9032960055        0.2500000000
+  O                0.2973103508        0.5517267830        0.2500000000
+  Fe               0.9906838255        0.2313056555        0.2500000000
+  Fe               0.5093161745        0.7313056555        0.2500000000
+  O                0.7521826832        0.4032960055        0.2500000000
+  P                0.4206349289        0.4043924090        0.2500000000
+  P                0.0793650711        0.9043924090        0.2500000000
+  O                0.2748151627        0.3302571768        0.4649217412
+  O                0.2251848373        0.8302571768        0.4649217412
+  Li               0.5000000000       -0.0000000000        0.5000000000
+  Li              -0.0000000000        0.5000000000        0.5000000000
+  O                0.7748151627        0.1697428232        0.5350782588
+  O                0.7251848373        0.6697428232        0.5350782588
+  Fe               0.0093161745        0.7686943445        0.7500000000
+  O                0.7026896492        0.4482732170        0.7500000000
+  O                0.2478173168        0.5967039945        0.7500000000
+  P                0.5793650711        0.5956075910        0.7500000000
+  Fe               0.4906838255        0.2686943445        0.7500000000
+  O                0.2521826832        0.0967039945        0.7500000000
+  P                0.9206349289        0.0956075910        0.7500000000
+  O                0.7973103508        0.9482732170        0.7500000000
+  O                0.7748151627        0.1697428232        0.9649217412
+  O                0.7251848373        0.6697428232        0.9649217412
  K_POINTS {crystal_b}
   16
   0.0 0.0 0.0 10
@@ -954,6 +1070,21 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ grep '!' LiFePO4-c-010-1
   0.5 0.5 0.5 1
 ```
 
+运行程序及运行状态查看:
+```
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 pw.x < LiFePO4-c-010-3-nscf-b.in > LiFePO4-c-010-3-nscf-b.out &
+[1] 47585
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup: redirecting stderr to stdout
+
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-3-nscf-b.out 
+     ./tmp/LiFePO4-c-010.save/charge-density
+
+     Starting wfcs are  152 randomized atomic wfcs
+     Checking if some PAW data can be deallocated... 
+
+     Band Structure Calculation
+     Davidson diagonalization with overlap
+```
 
 能带后处理:
 
@@ -963,6 +1094,7 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ grep '!' LiFePO4-c-010-1
 
 
 #### 4.3.5 态密度计算
+
 
 
 
