@@ -567,10 +567,328 @@ Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) 
   在结构驰豫（calculation='relax'）过程中，ATOMIC_POSITIONS是根据力而变化的，如果是vc-relax，原子坐标改变的同时，CELL_PARAMETERS根据应力变化（celldm在relax时是不变的）。
 
 
+
+
+
+结构优化输入文件 `LiFePO4-c-010-1-vcrelax.in`
+```
+ &CONTROL
+   calculation     = 'vc-relax'
+   restart_mode    = 'from_scratch'
+   outdir          = './tmp'
+   pseudo_dir      = './'
+   prefix          = 'LiFePO4-c-010'
+   verbosity       = 'low'
+   etot_conv_thr   = 5.D-5
+   forc_conv_thr   = 1.D-4
+   nstep           = 200
+ /
+ &SYSTEM
+   ibrav           = 0
+   nat             = 28
+   ntyp            = 4
+   ecutwfc         = 90.0
+   ecutrho         = 1080.0
+   occupations     = 'smearing'
+   degauss         = 0.005
+   smearing        = 'gaussian'
+   vdw_corr        = 'grimme-d3'
+   dftd3_version   = 3
+ /
+ &ELECTRONS
+   electron_maxstep = 128
+   conv_thr        = 1.D-8
+   mixing_mode     = 'plain'
+   mixing_beta     = 0.7
+   mixing_ndim     = 8
+   diagonalization = 'david'
+ /
+ &IONS
+   ion_dynamics    = 'bfgs'
+ /
+ &CELL
+   cell_dynamics   = 'bfgs'
+   press           = 0
+   press_conv_thr  = 0.1
+ /
+ CELL_PARAMETERS angstrom
+     4.746400000    0.000000000    0.000000000
+     0.000000000    10.443700000    0.000000000
+     0.000000000    0.000000000    6.090200000
+ ATOMIC_SPECIES
+   Fe 	55.845 	Fe.pbe-spn-kjpaw_psl.0.2.1.UPF
+   Li 	6.94 	li_pbe_v1.4.uspp.F.UPF
+   O 	15.999 	O.pbe-n-kjpaw_psl.0.1.UPF
+   P 	30.974 	P.pbe-n-rrkjus_psl.1.0.0.UPF
+ ATOMIC_POSITIONS crystal
+  Li  0.5000000000  0.0000000000  0.0000000000
+  Li  0.0000000000  0.5000000000  0.0000000000
+   O  0.2154900000  0.8345100000  0.0470000000
+   O  0.2845100000  0.3345100000  0.0470000000
+   O  0.2069500000  0.0429300000  0.2500000000
+   O  0.7581300000  0.9032800000  0.2500000000
+   O  0.2930500000  0.5429300000  0.2500000000
+  Fe  0.9752500000  0.2180200000  0.2500000000
+  Fe  0.5247500000  0.7180200000  0.2500000000
+   O  0.7418700000  0.4032800000  0.2500000000
+   P  0.4178200000  0.4052500000  0.2500000000
+   P  0.0821800000  0.9052500000  0.2500000000
+   O  0.2845100000  0.3345100000  0.4530000000
+   O  0.2154900000  0.8345100000  0.4530000000
+  Li  0.5000000000  0.0000000000  0.5000000000
+  Li  0.0000000000  0.5000000000  0.5000000000
+   O  0.7845100000  0.1654900000  0.5470000000
+   O  0.7154900000  0.6654900000  0.5470000000
+  Fe  0.0247500000  0.7819800000  0.7500000000
+   O  0.7069500000  0.4570700000  0.7500000000
+   O  0.2581300000  0.5967200000  0.7500000000
+   P  0.5821800000  0.5947500000  0.7500000000
+  Fe  0.4752500000  0.2819800000  0.7500000000
+   O  0.2418700000  0.0967200000  0.7500000000
+   P  0.9178200000  0.0947500000  0.7500000000
+   O  0.7930500000  0.9570700000  0.7500000000
+   O  0.7845100000  0.1654900000  0.9530000000
+   O  0.7154900000  0.6654900000  0.9530000000
+ K_POINTS automatic
+ 5 2 4 0 0 0
+```
+
+
+后台运行命令及结果查看
+```
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 pw.x < LiFePO4-c-010-1-vcrelax.in > LiFePO4-c-010-1-vcrelax.out &
+[1] 3785504
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup: redirecting stderr to stdout
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ ll
+total 4.4M
+-rw-r--r-- 1 msmcquan quansilong 1.9M 7月  23 15:31 Fe.pbe-spn-kjpaw_psl.0.2.1.UPF
+-rw-r--r-- 1 msmcquan quansilong 2.6K 6月  30 14:15 LiFePO4-c-010-1-vcrelax.in
+-rw-r--r-- 1 msmcquan quansilong  17K 7月  23 15:37 LiFePO4-c-010-1-vcrelax.out
+-rw-r--r-- 1 msmcquan quansilong 374K 7月  23 15:31 li_pbe_v1.4.uspp.F.UPF
+-rw-r--r-- 1 msmcquan quansilong 909K 7月  23 15:31 O.pbe-n-kjpaw_psl.0.1.UPF
+-rw-r--r-- 1 msmcquan quansilong 1.3M 7月  23 15:31 P.pbe-n-rrkjus_psl.1.0.0.UPF
+-rw-r--r-- 1 msmcquan quansilong  889 6月  24 16:10 runqe-pw.pbs
+drwxr-xr-x 2 msmcquan quansilong 4.0K 7月  23 15:34 tmp/
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-1-vcrelax.out 
+     Davidson diagonalization with overlap
+     ethr =  9.70E-07,  avg # of iterations =  4.9
+
+     total cpu time spent up to now is      274.5 secs
+
+     total energy              =   -2099.28625060 Ry
+     estimated scf accuracy    <       0.00031274 Ry
+
+     iteration # 10     ecut=    90.00 Ry     beta= 0.70
+     Davidson diagonalization with overlap
+     ethr =  1.63E-07,  avg # of iterations =  4.3
+
+     total cpu time spent up to now is      304.9 secs
+
+     total energy              =   -2099.28633308 Ry
+     estimated scf accuracy    <       0.00005547 Ry
+
+     iteration # 11     ecut=    90.00 Ry     beta= 0.70
+     Davidson diagonalization with overlap
+
+```
+
+
 #### 4.3.3 自洽计算
 
+结构优化输入文件 `LiFePO4-c-010-2-scf.in`
+```
+ &CONTROL
+   calculation     = 'scf'
+   restart_mode    = 'from_scratch'
+   outdir          = './tmp'
+   pseudo_dir      = './'
+   prefix          = 'LiFePO4-c-010'
+   verbosity       = 'low'
+   etot_conv_thr   = 5.D-5
+   forc_conv_thr   = 1.D-4
+   nstep           = 200
+ /
+ &SYSTEM
+   ibrav           = 0
+   nat             = 28
+   ntyp            = 4
+   ecutwfc         = 90.0
+   ecutrho         = 1080.0
+   occupations     = 'smearing'
+   degauss         = 0.005
+   smearing        = 'gaussian'
+   vdw_corr        = 'grimme-d3'
+   dftd3_version   = 3
+ /
+ &ELECTRONS
+   electron_maxstep = 128
+   conv_thr        = 1.D-8
+   mixing_mode     = 'plain'
+   mixing_beta     = 0.7
+   mixing_ndim     = 8
+   diagonalization = 'david'
+ /
+ &IONS
+   ion_dynamics    = 'bfgs'
+ /
+ &CELL
+   cell_dynamics   = 'bfgs'
+   press           = 0
+   press_conv_thr  = 0.1
+ /
+ CELL_PARAMETERS angstrom
+     4.746400000    0.000000000    0.000000000
+     0.000000000    10.443700000    0.000000000
+     0.000000000    0.000000000    6.090200000
+ ATOMIC_SPECIES
+   Fe 	55.845 	Fe.pbe-spn-kjpaw_psl.0.2.1.UPF
+   Li 	6.94 	li_pbe_v1.4.uspp.F.UPF
+   O 	15.999 	O.pbe-n-kjpaw_psl.0.1.UPF
+   P 	30.974 	P.pbe-n-rrkjus_psl.1.0.0.UPF
+ ATOMIC_POSITIONS crystal
+  Li  0.5000000000  0.0000000000  0.0000000000
+  Li  0.0000000000  0.5000000000  0.0000000000
+   O  0.2154900000  0.8345100000  0.0470000000
+   O  0.2845100000  0.3345100000  0.0470000000
+   O  0.2069500000  0.0429300000  0.2500000000
+   O  0.7581300000  0.9032800000  0.2500000000
+   O  0.2930500000  0.5429300000  0.2500000000
+  Fe  0.9752500000  0.2180200000  0.2500000000
+  Fe  0.5247500000  0.7180200000  0.2500000000
+   O  0.7418700000  0.4032800000  0.2500000000
+   P  0.4178200000  0.4052500000  0.2500000000
+   P  0.0821800000  0.9052500000  0.2500000000
+   O  0.2845100000  0.3345100000  0.4530000000
+   O  0.2154900000  0.8345100000  0.4530000000
+  Li  0.5000000000  0.0000000000  0.5000000000
+  Li  0.0000000000  0.5000000000  0.5000000000
+   O  0.7845100000  0.1654900000  0.5470000000
+   O  0.7154900000  0.6654900000  0.5470000000
+  Fe  0.0247500000  0.7819800000  0.7500000000
+   O  0.7069500000  0.4570700000  0.7500000000
+   O  0.2581300000  0.5967200000  0.7500000000
+   P  0.5821800000  0.5947500000  0.7500000000
+  Fe  0.4752500000  0.2819800000  0.7500000000
+   O  0.2418700000  0.0967200000  0.7500000000
+   P  0.9178200000  0.0947500000  0.7500000000
+   O  0.7930500000  0.9570700000  0.7500000000
+   O  0.7845100000  0.1654900000  0.9530000000
+   O  0.7154900000  0.6654900000  0.9530000000
+ K_POINTS automatic
+ 5 2 4 0 0 0
+```
 
 #### 4.3.4 非自洽计算
+
+
+能带计算
+结构优化输入文件 `LiFePO4-c-010-3-nscf-b.in`
+```
+ &CONTROL
+   calculation     = 'bands'
+   restart_mode    = 'from_scratch'
+   outdir          = './tmp'
+   pseudo_dir      = './'
+   prefix          = 'LiFePO4-c-010'
+   verbosity       = 'low'
+   etot_conv_thr   = 5.D-5
+   forc_conv_thr   = 1.D-4
+   nstep           = 200
+ /
+ &SYSTEM
+   ibrav           = 0
+   nat             = 28
+   ntyp            = 4
+   ecutwfc         = 90.0
+   ecutrho         = 1080.0
+   occupations     = 'smearing'
+   degauss         = 0.005
+   smearing        = 'gaussian'
+   vdw_corr        = 'grimme-d3'
+   dftd3_version   = 3
+ /
+ &ELECTRONS
+   electron_maxstep = 128
+   conv_thr        = 1.D-8
+   mixing_mode     = 'plain'
+   mixing_beta     = 0.7
+   mixing_ndim     = 8
+   diagonalization = 'david'
+ /
+ &IONS
+   ion_dynamics    = 'bfgs'
+ /
+ &CELL
+   cell_dynamics   = 'bfgs'
+   press           = 0
+   press_conv_thr  = 0.1
+ /
+ CELL_PARAMETERS angstrom
+     4.746400000    0.000000000    0.000000000
+     0.000000000    10.443700000    0.000000000
+     0.000000000    0.000000000    6.090200000
+ ATOMIC_SPECIES
+   Fe 	55.845 	Fe.pbe-spn-kjpaw_psl.0.2.1.UPF
+   Li 	6.94 	li_pbe_v1.4.uspp.F.UPF
+   O 	15.999 	O.pbe-n-kjpaw_psl.0.1.UPF
+   P 	30.974 	P.pbe-n-rrkjus_psl.1.0.0.UPF
+ ATOMIC_POSITIONS crystal
+  Li  0.5000000000  0.0000000000  0.0000000000
+  Li  0.0000000000  0.5000000000  0.0000000000
+   O  0.2154900000  0.8345100000  0.0470000000
+   O  0.2845100000  0.3345100000  0.0470000000
+   O  0.2069500000  0.0429300000  0.2500000000
+   O  0.7581300000  0.9032800000  0.2500000000
+   O  0.2930500000  0.5429300000  0.2500000000
+  Fe  0.9752500000  0.2180200000  0.2500000000
+  Fe  0.5247500000  0.7180200000  0.2500000000
+   O  0.7418700000  0.4032800000  0.2500000000
+   P  0.4178200000  0.4052500000  0.2500000000
+   P  0.0821800000  0.9052500000  0.2500000000
+   O  0.2845100000  0.3345100000  0.4530000000
+   O  0.2154900000  0.8345100000  0.4530000000
+  Li  0.5000000000  0.0000000000  0.5000000000
+  Li  0.0000000000  0.5000000000  0.5000000000
+   O  0.7845100000  0.1654900000  0.5470000000
+   O  0.7154900000  0.6654900000  0.5470000000
+  Fe  0.0247500000  0.7819800000  0.7500000000
+   O  0.7069500000  0.4570700000  0.7500000000
+   O  0.2581300000  0.5967200000  0.7500000000
+   P  0.5821800000  0.5947500000  0.7500000000
+  Fe  0.4752500000  0.2819800000  0.7500000000
+   O  0.2418700000  0.0967200000  0.7500000000
+   P  0.9178200000  0.0947500000  0.7500000000
+   O  0.7930500000  0.9570700000  0.7500000000
+   O  0.7845100000  0.1654900000  0.9530000000
+   O  0.7154900000  0.6654900000  0.9530000000
+ K_POINTS {crystal_b}
+  16
+  0.0 0.0 0.0 10
+  0.5 0.0 0.0 10
+  0.5 0.5 0.0 10
+  0.0 0.5 0.0 10
+  0.0 0.0 0.0 10
+  0.0 0.0 0.5 10
+  0.5 0.0 0.5 10
+  0.5 0.5 0.5 10
+  0.0 0.5 0.5 10
+  0.0 0.0 0.5 1
+
+  0.5 0.0 0.0 10
+  0.5 0.0 0.5 1
+
+  0.0 0.5 0.0 10
+  0.0 0.5 0.5 1
+
+  0.5 0.5 0.0 10
+  0.5 0.5 0.5 1
+```
+
+
+
+能带后处理
+
+
 
 
 <font size="4" color="red"><b>这是红色加粗的大号字体</b></font>
