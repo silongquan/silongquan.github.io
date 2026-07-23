@@ -538,12 +538,10 @@ Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) 
   
   'scf'：自洽计算，self-consistent field，通过迭代的方式数值求解微分-积分方程（Kohn-Sham方程），迭代收敛以电荷的变化足够小为准，最终得到自洽电荷。
   
-  'nscf'：非自洽计算，scf计算常在k空间的网格上进行，网格要足够密以完成k空间上的积分，在DOS等计算需要更密的k
-  点，这时在自洽电荷基础上，计算这些更多的k
+  'nscf'：非自洽计算，scf计算常在k空间的网格上进行，网格要足够密以完成k空间上的积分，在DOS等计算需要更密的k点，这时在自洽电荷基础上，计算这些更多的k
   点，nscf计算保持自洽电荷不变。
   
-  'bands'：也是一种nscf计算，k
-  点按照三维k空间中的特殊路径选取。
+  'bands'：也是一种nscf计算，k点按照三维k空间中的特殊路径选取。
   
   'relax'：一系列scf计算，通过Hellman-Feynman力计算离子坐标驰豫（通过优化算法找到受力为零的结构），relax计算时固定cell不变。
   
@@ -568,6 +566,7 @@ Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) 
 
 
 
+下载**[SSSP](https://legacy.materialscloud.org/discover/sssp/table/efficiency)**,将Li、Fe、P和O元素的赝势复制上传到工作目录.
 
 
 结构优化输入文件 `LiFePO4-c-010-1-vcrelax.in`
