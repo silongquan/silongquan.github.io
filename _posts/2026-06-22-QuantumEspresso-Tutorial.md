@@ -566,7 +566,7 @@ Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) 
 
 
 
-下载**[SSSP](https://legacy.materialscloud.org/discover/sssp/table/efficiency)**,将Li、Fe、P和O元素的赝势复制上传到工作目录.
+下载**[SSSP](https://legacy.materialscloud.org/discover/sssp/table/efficiency)**,将Li、Fe、P和O元素的赝势复制并上传到工作目录.
 
 
 结构优化输入文件 `LiFePO4-c-010-1-vcrelax.in`
@@ -652,8 +652,7 @@ Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) 
  5 2 4 0 0 0
 ```
 
-
-后台运行命令及结果查看
+后台运行命令及结果查看如下:
 ```
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 pw.x < LiFePO4-c-010-1-vcrelax.in > LiFePO4-c-010-1-vcrelax.out &
 [1] 3785504
@@ -692,9 +691,82 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-1-
 ```
 
 
+结构优化计算完后, 可使用以下命令查看优化后的晶格参数和原子位置坐标:
+```
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ awk  '/Begin final coordinates/,/End final coordinates/{print $0}' LiFePO4-c-010-1-vcrelax.out 
+Begin final coordinates
+     new unit-cell volume =   1774.49076 a.u.^3 (   262.95240 Ang^3 )
+     density =      3.98488 g/cm^3
+
+CELL_PARAMETERS (angstrom)
+   4.644179108   0.000000000   0.000000000
+   0.000000000   9.829413620   0.000000000
+   0.000000000   0.000000000   5.760239883
+
+ATOMIC_POSITIONS (crystal)
+Li               0.5000000000       -0.0000000000        0.0000000000
+Li              -0.0000000000        0.5000000000       -0.0000000000
+O                0.2251848373        0.8302571768        0.0350782588
+O                0.2748151627        0.3302571768        0.0350782588
+O                0.2026896492        0.0517267830        0.2500000000
+O                0.7478173168        0.9032960055        0.2500000000
+O                0.2973103508        0.5517267830        0.2500000000
+Fe               0.9906838255        0.2313056555        0.2500000000
+Fe               0.5093161745        0.7313056555        0.2500000000
+O                0.7521826832        0.4032960055        0.2500000000
+P                0.4206349289        0.4043924090        0.2500000000
+P                0.0793650711        0.9043924090        0.2500000000
+O                0.2748151627        0.3302571768        0.4649217412
+O                0.2251848373        0.8302571768        0.4649217412
+Li               0.5000000000       -0.0000000000        0.5000000000
+Li              -0.0000000000        0.5000000000        0.5000000000
+O                0.7748151627        0.1697428232        0.5350782588
+O                0.7251848373        0.6697428232        0.5350782588
+Fe               0.0093161745        0.7686943445        0.7500000000
+O                0.7026896492        0.4482732170        0.7500000000
+O                0.2478173168        0.5967039945        0.7500000000
+P                0.5793650711        0.5956075910        0.7500000000
+Fe               0.4906838255        0.2686943445        0.7500000000
+O                0.2521826832        0.0967039945        0.7500000000
+P                0.9206349289        0.0956075910        0.7500000000
+O                0.7973103508        0.9482732170        0.7500000000
+O                0.7748151627        0.1697428232        0.9649217412
+O                0.7251848373        0.6697428232        0.9649217412
+End final coordinates
+```
+
+vc-relax计算包括多个自洽计算，查看自洽计算得到的总能:
+```
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ grep '!' LiFePO4-c-010-1-vcrelax.out 
+!    total energy              =   -2099.28634899 Ry
+!    total energy              =   -2099.31678210 Ry
+!    total energy              =   -2099.39883399 Ry
+!    total energy              =   -2099.41030006 Ry
+!    total energy              =   -2099.41411654 Ry
+!    total energy              =   -2099.41619453 Ry
+!    total energy              =   -2099.41748408 Ry
+!    total energy              =   -2099.41774441 Ry
+!    total energy              =   -2099.41798010 Ry
+!    total energy              =   -2099.41815458 Ry
+!    total energy              =   -2099.41827258 Ry
+!    total energy              =   -2099.41836681 Ry
+!    total energy              =   -2099.41842504 Ry
+!    total energy              =   -2099.41845125 Ry
+!    total energy              =   -2099.41845995 Ry
+!    total energy              =   -2099.41846304 Ry
+!    total energy              =   -2099.41846441 Ry
+!    total energy              =   -2099.41846514 Ry
+!    total energy              =   -2099.41846554 Ry
+!    total energy              =   -2099.41846580 Ry
+!    total energy              =   -2099.41846601 Ry
+!    total energy              =   -2099.41789939 Ry
+```
+
 #### 4.3.3 自洽计算
 
-结构优化输入文件 `LiFePO4-c-010-2-scf.in`
+由于pw.x约定：在同一目录，并保持outdir、prefix一致时，先运行vc-relax、relax计算，在接着的scf、nscf、bands计算会读取之前弛豫后的结构，而忽略此时的结构设置。所以，此时做scf计算，修改的地方是：将calculation='vc-relax'改成calculation='scf'，其他部分与上一步输入文件相同。另外，vc-relax和relax计算最后一步包含了最终结构的scf计算，即vc-relax后面可以直接跟着bands计算，所以这里省去这一步骤。
+
+自洽计算输入文件 `LiFePO4-c-010-2-scf.in`
 ```
  &CONTROL
    calculation     = 'scf'
@@ -777,11 +849,10 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-1-
  5 2 4 0 0 0
 ```
 
-#### 4.3.4 非自洽计算
+#### 4.3.4 (非自洽)能带计算
 
 
-能带计算
-结构优化输入文件 `LiFePO4-c-010-3-nscf-b.in`
+能带计算输入文件 `LiFePO4-c-010-3-nscf-b.in`
 ```
  &CONTROL
    calculation     = 'bands'
@@ -884,9 +955,14 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-1-
 ```
 
 
+能带后处理:
 
-能带后处理
 
+绘制能带图:
+
+
+
+#### 4.3.5 态密度计算
 
 
 
