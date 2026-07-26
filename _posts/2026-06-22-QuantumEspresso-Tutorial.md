@@ -533,8 +533,10 @@ Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) 
   采用以上工具构建包含如缺陷、掺杂、表面、界面等特殊结构模型,导出为cif格式文件,或者可转为Quantum ESPRESSO计算输入文件的其他格式文件。
 
 #### 4.3.2 结构优化
+  
+  构建计算模型的cif格式文件或者可转为Quantum ESPRESSO计算输入文件的其他格式文件后,借助[`Quantum ESPRESSO input generator and structure visualizer`](https://qeinputgenerator.materialscloud.io/)和[QEtoolkit](https://www.densityflow.com/)中[`cif转为pw.x输入文件`](https://www.densityflow.com/cif2qe.php)在线工具产生 `pw.x`结构优化的输入文件，然后根据需要进行稍微修改。
 
-  pw.x处理的计算包括以下7种类型，在输入文件中用calculation设置：
+  `pw.x`处理的计算包括以下7种类型，在输入文件中用calculation设置：
   
   'scf'：自洽计算，self-consistent field，通过迭代的方式数值求解微分-积分方程（Kohn-Sham方程），迭代收敛以电荷的变化足够小为准，最终得到自洽电荷。
   
@@ -653,7 +655,7 @@ Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) 
 ```
 
 后台运行命令及运行状态查看如下:
-```
+```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 pw.x < LiFePO4-c-010-1-vcrelax.in > LiFePO4-c-010-1-vcrelax.out &
 [1] 3785504
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup: redirecting stderr to stdout
@@ -691,7 +693,7 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-1-
 
 
 结构优化计算完后, 可使用以下命令查看优化后的晶格参数和原子位置坐标:
-```
+```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ awk  '/Begin final coordinates/,/End final coordinates/{print $0}' LiFePO4-c-010-1-vcrelax.out 
 Begin final coordinates
      new unit-cell volume =   1774.49076 a.u.^3 (   262.95240 Ang^3 )
@@ -735,7 +737,7 @@ End final coordinates
 ```
 
 vc-relax计算包括多个自洽计算，查看自洽计算得到的总能:
-```
+```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ grep '!' LiFePO4-c-010-1-vcrelax.out 
 !    total energy              =   -2099.28634899 Ry
 !    total energy              =   -2099.31678210 Ry
@@ -766,7 +768,7 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ grep '!' LiFePO4-c-010-1
 由于pw.x约定：在同一目录，并保持outdir、prefix一致时，先运行vc-relax、relax计算，在接着的scf、nscf、bands计算会读取之前弛豫后的结构，而忽略此时的结构设置。所以，此时做scf计算，修改的地方是：将calculation='vc-relax'改成calculation='scf'，其他部分与上一步输入文件相同。但是为了确保计算可靠,可将vc-relax计算后的CELL_PARAMETERS和ATOMIC_POSITIONS更新到自洽计算的输入文件。另外，vc-relax和relax计算最后一步包含了最终结构的scf计算，即vc-relax后面可以直接跟着bands计算，可省去自洽计算这一步骤。这里考虑计算严谨性，再进行一次自洽计算。
 
 复制结构优化的输入文件 `LiFePO4-c-010-1-vcrelax.in`,并重命名为 `LiFePO4-c-010-2-scf.in`:
-```
+```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ cp LiFePO4-c-010-1-vcrelax.in LiFePO4-c-010-2-scf.in 
 ```
 
@@ -854,7 +856,7 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ cp LiFePO4-c-010-1-vcrel
 ```
 
 运行程序及运行状态查看:
-```
+```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 pw.x < LiFePO4-c-010-2-scf.in > LiFePO4-c-010-2-scf.out &
 [1] 6731
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup: redirecting stderr to stdout
@@ -885,7 +887,7 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-2-
 ```
 
 直到输出以下结果说明计算正常完成:
-```
+```bash
      the Fermi energy is    10.4522 ev
 
 !    total energy              =   -2099.41789939 Ry
@@ -955,7 +957,7 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-2-
 ```
 
 自洽计算完成后查询费米能级（费米能级一般以scf计算为准）:
-```
+```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ grep Fermi LiFePO4-c-010-2-scf.out |tail -1
      the Fermi energy is    10.4522 ev
 ```
@@ -964,7 +966,7 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ grep Fermi LiFePO4-c-010
 #### 4.3.4 (非自洽)能带计算
 
 复制自洽计算的输入文件 `LiFePO4-c-010-2-scf.in`,并重命名为 `LiFePO4-c-010-3-nscf-b.in`:
-```
+```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ cp LiFePO4-c-010-2-scf.in LiFePO4-c-010-3-nscf-b.in
 ```
 
@@ -1071,7 +1073,7 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ cp LiFePO4-c-010-2-scf.i
 ```
 
 运行程序及运行状态查看:
-```
+```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 pw.x < LiFePO4-c-010-3-nscf-b.in > LiFePO4-c-010-3-nscf-b.out &
 [1] 47585
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup: redirecting stderr to stdout
@@ -1086,10 +1088,99 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-3-
      Davidson diagonalization with overlap
 ```
 
-能带后处理:
+能带计算完后需要采用 `bands.x`进行能带后处理. 新建 `bands.x`能带后处理输入文件,文件名命为 `LiFePO4-c-010-4-bands.in`, `LiFePO4-c-010-4-bands.in`如下:
+```
+&BANDS
+prefix='LiFePO4-c-010',
+outdir='tmp'
+filband='bd.dat'
+lp=.true.
+/
+```
+
+运行bands.x后处理程序及运行状态查看:
+```bash
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 bands.x < LiFePO4-c-010-4-bands.in > LiFePO4-c-010-4-bands.out &
+[1] 3049850
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup: redirecting stderr to stdout
+
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-4-bands.out 
+     Sum       14009    4677   1285              1063481   204697   29735
+
+     Using Slab Decomposition
 
 
-绘制能带图:
+     Check: negative core charge=   -0.000003
+     Reading collected, re-writing distributed wavefunctions
+[inspur-NF5468M5:3049850] 23 more processes have sent help message help-mpi-btl-openib.txt / no device params found
+[inspur-NF5468M5:3049850] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+[inspur-NF5468M5:3049850] 11 more processes have sent help message help-mpi-btl-openib.txt / no active ports found
+     high-symmetry point:  0.0000 0.0000 0.0000   x coordinate   0.0000
+     high-symmetry point:  0.5000 0.0000 0.0000   x coordinate   0.5000
+     high-symmetry point:  0.5000 0.2362 0.0000   x coordinate   0.7362
+     high-symmetry point:  0.0000 0.2362 0.0000   x coordinate   1.2362
+     high-symmetry point:  0.0000 0.0000 0.0000   x coordinate   1.4725
+     high-symmetry point:  0.0000 0.0000 0.4031   x coordinate   1.8756
+     high-symmetry point:  0.5000 0.0000 0.4031   x coordinate   2.3756
+     high-symmetry point:  0.5000 0.2362 0.4031   x coordinate   2.6118
+     high-symmetry point:  0.0000 0.2362 0.4031   x coordinate   3.1118
+     high-symmetry point:  0.0000 0.0000 0.4031   x coordinate   3.3481
+     high-symmetry point:  0.5000 0.0000 0.0000   x coordinate   3.3481
+     high-symmetry point:  0.5000 0.0000 0.4031   x coordinate   3.7512
+     high-symmetry point:  0.0000 0.2362 0.0000   x coordinate   3.7512
+     high-symmetry point:  0.0000 0.2362 0.4031   x coordinate   4.1543
+     high-symmetry point:  0.5000 0.2362 0.0000   x coordinate   4.1543
+     high-symmetry point:  0.5000 0.2362 0.4031   x coordinate   4.5575
+
+     Plottable bands (eV) written to file bd.dat.gnu
+     Bands written to file bd.dat
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -32 LiFePO4-c-010-4-bands.out 
+
+ **************************************************************************
+
+ **************************************************************************
+
+                    xk=(   0.50000,   0.23624,   0.40312  )
+
+     zone border point and non-symmorphic group 
+     symmetry decomposition not available
+
+ **************************************************************************
+
+     BANDS        :   7m41.99s CPU   8m37.07s WALL
+
+
+   This run was terminated on:  12: 0:43  26Jul2026            
+
+=------------------------------------------------------------------------------=
+   JOB DONE.
+=------------------------------------------------------------------------------=
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ ll -th
+total 16M
+-rw-r--r-- 1 msmcquan quansilong 251K 7月  26 12:00 LiFePO4-c-010-4-bands.out
+-rw-r--r-- 1 msmcquan quansilong 9.9M 7月  26 12:00 p_avg.dat
+drwxr-xr-x 3 msmcquan quansilong 4.0K 7月  26 12:00 tmp/
+-rw-r--r-- 1 msmcquan quansilong 119K 7月  26 11:59 bd.dat.rap
+-rw-r--r-- 1 msmcquan quansilong 132K 7月  26 11:52 bd.dat
+-rw-r--r-- 1 msmcquan quansilong 293K 7月  26 11:52 bd.dat.gnu
+-rw-r--r-- 1 msmcquan quansilong   73 7月  26 11:45 LiFePO4-c-010-4-bands.in
+-rw-r--r-- 1 msmcquan quansilong  18K 7月  24 00:31 LiFePO4-c-010-3-nscf-b.out
+-rw-r--r-- 1 msmcquan quansilong 3.5K 7月  23 23:34 LiFePO4-c-010-3-nscf-b.in
+-rw-r--r-- 1 msmcquan quansilong  43K 7月  23 23:13 LiFePO4-c-010-2-scf.out
+-rw-r--r-- 1 msmcquan quansilong 3.3K 7月  23 22:39 LiFePO4-c-010-2-scf.in
+-rw-r--r-- 1 msmcquan quansilong 668K 7月  23 17:25 LiFePO4-c-010-1-vcrelax.out
+-rw-r--r-- 1 msmcquan quansilong 909K 7月  23 15:31 O.pbe-n-kjpaw_psl.0.1.UPF
+-rw-r--r-- 1 msmcquan quansilong 1.3M 7月  23 15:31 P.pbe-n-rrkjus_psl.1.0.0.UPF
+-rw-r--r-- 1 msmcquan quansilong 1.9M 7月  23 15:31 Fe.pbe-spn-kjpaw_psl.0.2.1.UPF
+-rw-r--r-- 1 msmcquan quansilong 374K 7月  23 15:31 li_pbe_v1.4.uspp.F.UPF
+-rw-r--r-- 1 msmcquan quansilong 2.6K 6月  30 14:15 LiFePO4-c-010-1-vcrelax.in
+-rw-r--r-- 1 msmcquan quansilong  889 6月  24 16:10 runqe-pw.pbs
+```
+
+
+任务结束后，在 `bd.bat`中有能带数据，我们可以通过QE自带的 `plotband.x`绘制能带图,但是画图的自定义效果不够;也可以编写python代码用python绘制能带图.
+用 `bd.dat.gnu` Origin绘制能带图:
+可以用QE自带的plotband.x画能带图，但是画图的自定义效果不够，这里不再介绍，这里为了用bd.dat画能带，使用python运行以下代码（或参考这里）：
 
 
 
