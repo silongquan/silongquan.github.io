@@ -1134,7 +1134,7 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-4-
 
      Plottable bands (eV) written to file bd.dat.gnu
      Bands written to file bd.dat
-msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -32 LiFePO4-c-010-4-bands.out 
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -20 LiFePO4-c-010-4-bands.out 
 
  **************************************************************************
 
@@ -1308,10 +1308,36 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-5-
 
      Band Structure Calculation
      Davidson diagonalization with overlap
+smcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -20 LiFePO4-c-010-5-nscf.out 
+     add_vuspsi   :    332.20s CPU    333.05s WALL (   26300 calls)
+
+     General routines
+     calbec       :    349.88s CPU    355.75s WALL (   26300 calls)
+     fft          :      0.12s CPU      0.13s WALL (      13 calls)
+     ffts         :      0.00s CPU      0.00s WALL (       1 calls)
+     fftw         :   2261.67s CPU   2409.18s WALL ( 3495162 calls)
+     interpolate  :      0.01s CPU      0.01s WALL (       1 calls)
+     davcio       :      0.37s CPU      0.66s WALL (     448 calls)
+
+     Parallel routines
+
+     PWSCF        :      1h32m CPU      1h35m WALL
+
+
+   This run was terminated on:  19:20:44  26Jul2026            
+
+=------------------------------------------------------------------------------=
+   JOB DONE.
+=------------------------------------------------------------------------------=
 ```
 
 
-nscf非自洽计算完成后,运行 `dos.x`进行态密度DOS后处理.新建 `dos.x`态密度后处理输入文件,文件名命为 `LiFePO4-c-010-6-dos.in`, `LiFePO4-c-010-6-dos.in`如下:
+nscf非自洽计算完成后,运行 `dos.x`进行态密度DOS后处理.新建 `dos.x`态密度后处理输入文件,文件名命为 `LiFePO4-c-010-6-dos.in`, 
+```bash
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ vi LiFePO4-c-010-6-dos.in
+```
+
+`LiFePO4-c-010-6-dos.in`内容如下:
 ```
 &DOS
  prefix='LiFePO4-c-010',
@@ -1323,11 +1349,53 @@ nscf非自洽计算完成后,运行 `dos.x`进行态密度DOS后处理.新建 `d
 /
 ```
 
+运行 `bands.x`后处理程序及运行状态查看:
+```bash
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 dos.x < LiFePO4-c-010-6-dos.in > LiFePO4-c-010-6-dos.out &
+[1] 3523969
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup: redirecting stderr to stdout
+
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-6-dos.out 
+[inspur-NF5468M5:3523969] 11 more processes have sent help message help-mpi-btl-openib.txt / no active ports found
+
+     DOS          :      7.47s CPU      7.93s WALL
 
 
-`dos.x`任务结束后，将在工作目录产生 `bd.dat`、bd.dat.rap、 `bd.dat.gnu`、 `p_avg.dat`和 `LiFePO4-c-010-4-bands.out`五个文件.在 `bd.bat`中有能带数据，可以通过QE自带的 `plotband.x`绘制能带图,但是画图的自定义效果不够;也可以编写python代码用python绘制能带图.
- `bd.dat.gnu`可用于Origin绘制能带图,自定义效果较好.用Origin绘制能带如下:
+   This run was terminated on:  19:46:54  26Jul2026            
+
+=------------------------------------------------------------------------------=
+   JOB DONE.
+=------------------------------------------------------------------------------=
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$  ll -th
+total 17M
+-rw-r--r-- 1 msmcquan quansilong 3.7K 7月  26 19:46 LiFePO4-c-010-6-dos.out
+-rw-r--r-- 1 msmcquan quansilong 306K 7月  26 19:46 LiFePO4.dos
+-rw-r--r-- 1 msmcquan quansilong  111 7月  26 19:42 LiFePO4-c-010-6-dos.in
+-rw-r--r-- 1 msmcquan quansilong  21K 7月  26 19:20 LiFePO4-c-010-5-nscf.out
+drwxr-xr-x 3 msmcquan quansilong 4.0K 7月  26 19:20 tmp/
+-rw-r--r-- 1 msmcquan quansilong 3.3K 7月  26 17:00 LiFePO4-c-010-5-nscf.in
+-rw-r--r-- 1 msmcquan quansilong 251K 7月  26 12:00 LiFePO4-c-010-4-bands.out
+-rw-r--r-- 1 msmcquan quansilong 9.9M 7月  26 12:00 p_avg.dat
+-rw-r--r-- 1 msmcquan quansilong 119K 7月  26 11:59 bd.dat.rap
+-rw-r--r-- 1 msmcquan quansilong 132K 7月  26 11:52 bd.dat
+-rw-r--r-- 1 msmcquan quansilong 293K 7月  26 11:52 bd.dat.gnu
+-rw-r--r-- 1 msmcquan quansilong   73 7月  26 11:45 LiFePO4-c-010-4-bands.in
+-rw-r--r-- 1 msmcquan quansilong  18K 7月  24 00:31 LiFePO4-c-010-3-nscf-b.out
+-rw-r--r-- 1 msmcquan quansilong 3.5K 7月  23 23:34 LiFePO4-c-010-3-nscf-b.in
+-rw-r--r-- 1 msmcquan quansilong  43K 7月  23 23:13 LiFePO4-c-010-2-scf.out
+-rw-r--r-- 1 msmcquan quansilong 3.3K 7月  23 22:39 LiFePO4-c-010-2-scf.in
+-rw-r--r-- 1 msmcquan quansilong 668K 7月  23 17:25 LiFePO4-c-010-1-vcrelax.out
+-rw-r--r-- 1 msmcquan quansilong 909K 7月  23 15:31 O.pbe-n-kjpaw_psl.0.1.UPF
+-rw-r--r-- 1 msmcquan quansilong 1.3M 7月  23 15:31 P.pbe-n-rrkjus_psl.1.0.0.UPF
+-rw-r--r-- 1 msmcquan quansilong 1.9M 7月  23 15:31 Fe.pbe-spn-kjpaw_psl.0.2.1.UPF
+-rw-r--r-- 1 msmcquan quansilong 374K 7月  23 15:31 li_pbe_v1.4.uspp.F.UPF
+-rw-r--r-- 1 msmcquan quansilong 2.6K 6月  30 14:15 LiFePO4-c-010-1-vcrelax.in
+-rw-r--r-- 1 msmcquan quansilong  889 6月  24 16:10 runqe-pw.pbs
+```
+
+`dos.x`任务结束后，将在工作目录产生 `LiFePO4.dos`和 `LiFePO4-c-010-6-dos.out`两个个文件. `LiFePO4.dos`可用于Origin绘制态密度图.用Origin绘制态密度如下:
 ![LiFePO4态密度](/assets/image/2026-06-22/LiFePO4-c-010-QE-dos.png)
+
 
 
 <font size="4" color="red"><b>这是红色加粗的大号字体</b></font>
