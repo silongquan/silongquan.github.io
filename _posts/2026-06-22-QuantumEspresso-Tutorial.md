@@ -93,7 +93,7 @@ total 4.0K
 
 值得一提的是，QE在电声相互作用、弛豫时间计算等方面做的非常好。截至目前，QE的最新版本7.5版本。
 
-`Quantum ESPRESSO`是一套集成的开源软件套件，包含很多功能独立的程序模块，如常用的 `pw.x`, `bands.x`, `dos.x`, `cp.x`, `pp.x`, `neb.x`等。
+`Quantum ESPRESSO`是一套集成的开源软件套件，包含很多功能独立的程序模块，如常用的 `pw.x`, `bands.x`, `dos.x`, `cp.x`, `pp.x`, `neb.x`, `projwfc.x`等。
 
 ```bash
 quansilong@inspur-NF5468M5:~/soft/qe-7.5/bin$ pwd
@@ -1211,7 +1211,7 @@ drwxr-xr-x 3 msmcquan quansilong 4.0K 7月  26 12:00 tmp/
 -rw-r--r-- 1 msmcquan quansilong  889 6月  24 16:10 runqe-pw.pbs
 ```
 
-接着修改复制的 `LiFePO4-c-010-5-nscf.in`中 `calculation     = 'nscf'`和K_POINTS网格加密到25x10x20。nscf计算输入文件 `LiFePO4-c-010-5-nscf.in`如下:
+接着修改复制的 `LiFePO4-c-010-5-nscf.in`中 `calculation     = 'nscf'`和K_POINTS网格加密到15x6x12(如果计算过慢,可适当考虑减小k点密度)。nscf计算输入文件 `LiFePO4-c-010-5-nscf.in`如下:
 ```
  &CONTROL
    calculation     = 'nscf'
@@ -1291,7 +1291,7 @@ drwxr-xr-x 3 msmcquan quansilong 4.0K 7月  26 12:00 tmp/
    O                0.7748151627        0.1697428232        0.9649217412
    O                0.7251848373        0.6697428232        0.9649217412
  K_POINTS automatic
- 25 10 20 0 0 0
+ 15 6 12 0 0 0
 ```
 
 运行程序及运行状态查看:
