@@ -567,7 +567,6 @@ Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) 
   在结构驰豫（calculation='relax'）过程中，ATOMIC_POSITIONS是根据力而变化的，如果是vc-relax，原子坐标改变的同时，CELL_PARAMETERS根据应力变化（celldm在relax时是不变的）。
 
 
-
 下载**[SSSP](https://legacy.materialscloud.org/discover/sssp/table/efficiency)赝势**,将Li、Fe、P和O元素的赝势复制并上传到工作目录.
 
 
@@ -963,14 +962,14 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ grep Fermi LiFePO4-c-010
 ```
 
 
-#### 4.3.4 (非自洽)能带计算
+#### 4.3.4 能带计算
 
 复制自洽计算的输入文件 `LiFePO4-c-010-2-scf.in`,并重命名为 `LiFePO4-c-010-3-nscf-b.in`:
 ```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ cp LiFePO4-c-010-2-scf.in LiFePO4-c-010-3-nscf-b.in
 ```
 
-接着修改复制的 `LiFePO4-c-010-3-nscf-b.in`中 `calculation     = 'bands'`和K_POINTS标签中的内容。K_POINTS中的K-path可通过[SeeK-path](https://seekpath.materialscloud.io/)在线产生.能带计算输入文件 `LiFePO4-c-010-3-nscf-b.in`如下:
+接着修改复制的 `LiFePO4-c-010-3-nscf-b.in`中 `calculation     = 'bands'`和K_POINTS标签中的内容。K_POINTS中的K-path可通过[SeeK-path](https://seekpath.materialscloud.io/)在线产生.能带计算输入文件 `LiFePO4-c-010-3-nscf-b.in`如下(**注意:本教程能带计算未考虑自旋极化和DFT+U**):
 ```
  &CONTROL
    calculation     = 'bands'
@@ -1397,7 +1396,7 @@ drwxr-xr-x 3 msmcquan quansilong 4.0K 7月  26 19:20 tmp/
 ![LiFePO4态密度](/assets/image/2026-06-22/LiFePO4-c-010-QE-dos.png)
 
 
-
+---
 <font size="4" color="red"><b>这是红色加粗的大号字体</b></font>
 
 
