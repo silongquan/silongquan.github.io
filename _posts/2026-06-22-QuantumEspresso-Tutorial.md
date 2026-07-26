@@ -970,7 +970,7 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ grep Fermi LiFePO4-c-010
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ cp LiFePO4-c-010-2-scf.in LiFePO4-c-010-3-nscf-b.in
 ```
 
-接着修改复制的 `LiFePO4-c-010-3-nscf-b.in`中 `calculation     = 'bands'`和K_POINTS标签中的内容。能带计算输入文件 `LiFePO4-c-010-3-nscf-b.in`如下:
+接着修改复制的 `LiFePO4-c-010-3-nscf-b.in`中 `calculation     = 'bands'`和K_POINTS标签中的内容。K_POINTS中的K-path可通过[SeeK-path](https://seekpath.materialscloud.io/)在线产生.能带计算输入文件 `LiFePO4-c-010-3-nscf-b.in`如下:
 ```
  &CONTROL
    calculation     = 'bands'
@@ -1098,7 +1098,7 @@ lp=.true.
 /
 ```
 
-运行bands.x后处理程序及运行状态查看:
+运行 `bands.x`后处理程序及运行状态查看:
 ```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 bands.x < LiFePO4-c-010-4-bands.in > LiFePO4-c-010-4-bands.out &
 [1] 3049850
@@ -1177,16 +1177,157 @@ drwxr-xr-x 3 msmcquan quansilong 4.0K 7月  26 12:00 tmp/
 -rw-r--r-- 1 msmcquan quansilong  889 6月  24 16:10 runqe-pw.pbs
 ```
 
-
-任务结束后，在 `bd.bat`中有能带数据，我们可以通过QE自带的 `plotband.x`绘制能带图,但是画图的自定义效果不够;也可以编写python代码用python绘制能带图.
-用 `bd.dat.gnu` Origin绘制能带图:
-可以用QE自带的plotband.x画能带图，但是画图的自定义效果不够，这里不再介绍，这里为了用bd.dat画能带，使用python运行以下代码（或参考这里）：
-
+`bands.x`任务结束后，将在工作目录产生 `bd.dat`、bd.dat.rap、 `bd.dat.gnu`、 `p_avg.dat`和 `LiFePO4-c-010-4-bands.out`五个文件.在 `bd.bat`中有能带数据，可以通过QE自带的 `plotband.x`绘制能带图,但是画图的自定义效果不够;也可以编写python代码用python绘制能带图.
+ `bd.dat.gnu`可用于Origin绘制能带图,自定义效果较好.用Origin绘制能带如下:
+![LiFePO4能带](/assets/image/2026-06-22/LiFePO4-c-010-QE-bands.png)
 
 
 #### 4.3.5 态密度计算
 
+态密度(DOS)计算前为计算得到的态密度光滑准确,需做一次k点加密的非自洽计算(nscf).复制自洽计算的输入文件 `LiFePO4-c-010-2-scf.in`,并重命名为 `LiFePO4-c-010-5-nscf.in`:
 
+```bash
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ cp LiFePO4-c-010-2-scf.in LiFePO4-c-010-5-nscf.in
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ ll -th
+total 16M
+-rw-r--r-- 1 msmcquan quansilong 3.3K 7月  26 14:31 LiFePO4-c-010-5-nscf.in
+-rw-r--r-- 1 msmcquan quansilong 251K 7月  26 12:00 LiFePO4-c-010-4-bands.out
+-rw-r--r-- 1 msmcquan quansilong 9.9M 7月  26 12:00 p_avg.dat
+drwxr-xr-x 3 msmcquan quansilong 4.0K 7月  26 12:00 tmp/
+-rw-r--r-- 1 msmcquan quansilong 119K 7月  26 11:59 bd.dat.rap
+-rw-r--r-- 1 msmcquan quansilong 132K 7月  26 11:52 bd.dat
+-rw-r--r-- 1 msmcquan quansilong 293K 7月  26 11:52 bd.dat.gnu
+-rw-r--r-- 1 msmcquan quansilong   73 7月  26 11:45 LiFePO4-c-010-4-bands.in
+-rw-r--r-- 1 msmcquan quansilong  18K 7月  24 00:31 LiFePO4-c-010-3-nscf-b.out
+-rw-r--r-- 1 msmcquan quansilong 3.5K 7月  23 23:34 LiFePO4-c-010-3-nscf-b.in
+-rw-r--r-- 1 msmcquan quansilong  43K 7月  23 23:13 LiFePO4-c-010-2-scf.out
+-rw-r--r-- 1 msmcquan quansilong 3.3K 7月  23 22:39 LiFePO4-c-010-2-scf.in
+-rw-r--r-- 1 msmcquan quansilong 668K 7月  23 17:25 LiFePO4-c-010-1-vcrelax.out
+-rw-r--r-- 1 msmcquan quansilong 909K 7月  23 15:31 O.pbe-n-kjpaw_psl.0.1.UPF
+-rw-r--r-- 1 msmcquan quansilong 1.3M 7月  23 15:31 P.pbe-n-rrkjus_psl.1.0.0.UPF
+-rw-r--r-- 1 msmcquan quansilong 1.9M 7月  23 15:31 Fe.pbe-spn-kjpaw_psl.0.2.1.UPF
+-rw-r--r-- 1 msmcquan quansilong 374K 7月  23 15:31 li_pbe_v1.4.uspp.F.UPF
+-rw-r--r-- 1 msmcquan quansilong 2.6K 6月  30 14:15 LiFePO4-c-010-1-vcrelax.in
+-rw-r--r-- 1 msmcquan quansilong  889 6月  24 16:10 runqe-pw.pbs
+```
+
+接着修改复制的 `LiFePO4-c-010-5-nscf.in`中 `calculation     = 'nscf'`和K_POINTS网格加密到25x10x20。nscf计算输入文件 `LiFePO4-c-010-5-nscf.in`如下:
+```
+ &CONTROL
+   calculation     = 'nscf'
+   restart_mode    = 'from_scratch'
+   outdir          = './tmp'
+   pseudo_dir      = './'
+   prefix          = 'LiFePO4-c-010'
+   verbosity       = 'low'
+   etot_conv_thr   = 5.D-5
+   forc_conv_thr   = 1.D-4
+   nstep           = 200
+ /
+ &SYSTEM
+   ibrav           = 0
+   nat             = 28
+   ntyp            = 4
+   ecutwfc         = 90.0
+   ecutrho         = 1080.0
+   occupations     = 'smearing'
+   degauss         = 0.005
+   smearing        = 'gaussian'
+   vdw_corr        = 'grimme-d3'
+   dftd3_version   = 3
+ /
+ &ELECTRONS
+   electron_maxstep = 128
+   conv_thr        = 1.D-8
+   mixing_mode     = 'plain'
+   mixing_beta     = 0.7
+   mixing_ndim     = 8
+   diagonalization = 'david'
+ /
+ &IONS
+   ion_dynamics    = 'bfgs'
+ /
+ &CELL
+   cell_dynamics   = 'bfgs'
+   press           = 0
+   press_conv_thr  = 0.1
+ /
+ CELL_PARAMETERS angstrom
+   4.644179108   0.000000000   0.000000000
+   0.000000000   9.829413620   0.000000000
+   0.000000000   0.000000000   5.760239883
+ ATOMIC_SPECIES
+   Fe 	55.845 	Fe.pbe-spn-kjpaw_psl.0.2.1.UPF
+   Li 	6.94 	li_pbe_v1.4.uspp.F.UPF
+   O 	15.999 	O.pbe-n-kjpaw_psl.0.1.UPF
+   P 	30.974 	P.pbe-n-rrkjus_psl.1.0.0.UPF
+ ATOMIC_POSITIONS crystal
+   Li               0.5000000000       -0.0000000000        0.0000000000
+   Li              -0.0000000000        0.5000000000       -0.0000000000
+   O                0.2251848373        0.8302571768        0.0350782588
+   O                0.2748151627        0.3302571768        0.0350782588
+   O                0.2026896492        0.0517267830        0.2500000000
+   O                0.7478173168        0.9032960055        0.2500000000
+   O                0.2973103508        0.5517267830        0.2500000000
+   Fe               0.9906838255        0.2313056555        0.2500000000
+   Fe               0.5093161745        0.7313056555        0.2500000000
+   O                0.7521826832        0.4032960055        0.2500000000
+   P                0.4206349289        0.4043924090        0.2500000000
+   P                0.0793650711        0.9043924090        0.2500000000
+   O                0.2748151627        0.3302571768        0.4649217412
+   O                0.2251848373        0.8302571768        0.4649217412
+   Li               0.5000000000       -0.0000000000        0.5000000000
+   Li              -0.0000000000        0.5000000000        0.5000000000
+   O                0.7748151627        0.1697428232        0.5350782588
+   O                0.7251848373        0.6697428232        0.5350782588
+   Fe               0.0093161745        0.7686943445        0.7500000000
+   O                0.7026896492        0.4482732170        0.7500000000
+   O                0.2478173168        0.5967039945        0.7500000000
+   P                0.5793650711        0.5956075910        0.7500000000
+   Fe               0.4906838255        0.2686943445        0.7500000000
+   O                0.2521826832        0.0967039945        0.7500000000
+   P                0.9206349289        0.0956075910        0.7500000000
+   O                0.7973103508        0.9482732170        0.7500000000
+   O                0.7748151627        0.1697428232        0.9649217412
+   O                0.7251848373        0.6697428232        0.9649217412
+ K_POINTS automatic
+ 25 10 20 0 0 0
+```
+
+运行程序及运行状态查看:
+```bash
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 pw.x < LiFePO4-c-010-5-nscf.in > LiFePO4-c-010-5-nscf.out &
+[1] 3217129
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup: redirecting stderr to stdout
+
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-5-nscf.out 
+     ./tmp/LiFePO4-c-010.save/charge-density
+
+     Starting wfcs are  152 randomized atomic wfcs
+     Checking if some PAW data can be deallocated... 
+
+     Band Structure Calculation
+     Davidson diagonalization with overlap
+```
+
+
+nscf非自洽计算完成后,运行 `dos.x`进行态密度DOS后处理.新建 `dos.x`态密度后处理输入文件,文件名命为 `LiFePO4-c-010-6-dos.in`, `LiFePO4-c-010-6-dos.in`如下:
+```
+&DOS
+ prefix='LiFePO4-c-010',
+ outdir='./tmp'
+ ngauss=1
+ degauss=1.5d-2
+ DeltaE=1.0d-2
+ fildos='LiFePO4.dos'
+/
+```
+
+
+
+`dos.x`任务结束后，将在工作目录产生 `bd.dat`、bd.dat.rap、 `bd.dat.gnu`、 `p_avg.dat`和 `LiFePO4-c-010-4-bands.out`五个文件.在 `bd.bat`中有能带数据，可以通过QE自带的 `plotband.x`绘制能带图,但是画图的自定义效果不够;也可以编写python代码用python绘制能带图.
+ `bd.dat.gnu`可用于Origin绘制能带图,自定义效果较好.用Origin绘制能带如下:
+![LiFePO4态密度](/assets/image/2026-06-22/LiFePO4-c-010-QE-dos.png)
 
 
 <font size="4" color="red"><b>这是红色加粗的大号字体</b></font>
