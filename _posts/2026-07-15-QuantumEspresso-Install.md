@@ -123,3 +123,8 @@ tags: [QE, DFT, AIMD]
   qsub runqe-pw.pbs 
   ```
   队列提交脚本 `runqe-pw.pbs`一般服务器管理员会写好,并提供给用户! 
+
+
+## 参考资料
+1. [https://www.quantum-espresso.org/](https://www.quantum-espresso.org/)
+2. [Quantum Espresso的安装](https://www.guanjihuan.com/archives/12325)
