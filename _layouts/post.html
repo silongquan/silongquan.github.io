@@ -78,8 +78,42 @@ tail_includes:
         </span>
 
         <div>
-          <!-- pageviews -->
+          <!-- pageviews
           {% if site.pageviews.provider and site.analytics[site.pageviews.provider].id %}
+            <span>
+              <em id="pageviews">
+                <i class="fas fa-spinner fa-spin small"></i>
+              </em>
+              {{ site.data.locales[lang].post.pageview_measure }}
+            </span>
+          {% endif %}
+          -->
+
+          <!-- pageviews（按文章统计，Busuanzi） -->
+          {% if site.pageviews.provider == 'busuanzi' %}
+            <span class="me-3">
+              <em>
+                <i class="fa fa-eye" aria-hidden="true"></i>
+                <span
+                  id="busuanzi_value_page_pv"
+                  data-busuanzi-custom="true"
+                  data-busuanzi-id="{{ site.url | append: page.url }}"
+                ></span>
+              </em>
+              {{ site.data.locales[lang].post.pageview_measure }}
+            </span>
+          
+            <span>
+              <em>
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <span
+                  id="busuanzi_value_page_uv"
+                  data-busuanzi-custom="true"
+                  data-busuanzi-id="{{ site.url | append: page.url }}"
+                ></span>
+              </em>
+            </span>
+          {% elsif site.pageviews.provider and site.analytics[site.pageviews.provider].id %}
             <span>
               <em id="pageviews">
                 <i class="fas fa-spinner fa-spin small"></i>
