@@ -90,7 +90,6 @@ tail_includes:
           -->
 
           <!-- pageviews（按文章统计，Busuanzi） -->
-          {% if site.pageviews.provider == 'busuanzi' %}
             <span class="me-3">
               <em>
                 <i class="fa fa-eye" aria-hidden="true"></i>
@@ -113,14 +112,6 @@ tail_includes:
                 ></span>
               </em>
             </span>
-          {% elsif site.pageviews.provider and site.analytics[site.pageviews.provider].id %}
-            <span>
-              <em id="pageviews">
-                <i class="fas fa-spinner fa-spin small"></i>
-              </em>
-              {{ site.data.locales[lang].post.pageview_measure }}
-            </span>
-          {% endif %}
 
           <!-- read time -->
           {% include read-time.html content=content prompt=true lang=lang %}
