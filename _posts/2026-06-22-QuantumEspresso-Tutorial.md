@@ -1458,3 +1458,7 @@ drwxr-xr-x 3 msmcquan quansilong 4.0K 7月  26 19:20 tmp/
     print("AI:", get_ai_response(user_input))
 ~~~
 
+## 参考资料
+
+1. [QE实践详解](https://yyyu200.github.io/DFTbook/blogs/2019/04/01/HandsOn/)
+2. [https://www.quantum-espresso.org/](https://www.quantum-espresso.org/)
