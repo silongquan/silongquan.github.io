@@ -1176,7 +1176,7 @@ drwxr-xr-x 3 msmcquan quansilong 4.0K 7月  26 12:00 tmp/
 -rw-r--r-- 1 msmcquan quansilong  889 6月  24 16:10 runqe-pw.pbs
 ```
 
-`bands.x`任务结束后，将在工作目录产生 `bd.dat`、bd.dat.rap、 `bd.dat.gnu`、 `p_avg.dat`和 `LiFePO4-c-010-4-bands.out`五个文件.在 `bd.bat`中有能带数据，可以通过QE自带的 `plotband.x`绘制能带图,但是画图的自定义效果不够;也可以编写python代码用python绘制能带图.
+`bands.x`任务结束后，将在工作目录产生 `bd.dat`、 `bd.dat.rap`、 `bd.dat.gnu`、 `p_avg.dat`和 `LiFePO4-c-010-4-bands.out`五个文件.在 `bd.bat`中有能带数据，可以通过QE自带的 `plotband.x`绘制能带图,但是画图的自定义效果不够;也可以编写python代码用python绘制能带图.
  `bd.dat.gnu`可用于Origin绘制能带图,自定义效果较好.用Origin绘制能带如下:
 ![LiFePO4能带](/assets/image/2026-06-22/LiFePO4-c-010-QE-bands.png)
 
@@ -1395,6 +1395,13 @@ drwxr-xr-x 3 msmcquan quansilong 4.0K 7月  26 19:20 tmp/
 `dos.x`任务结束后，将在工作目录产生 `LiFePO4.dos`和 `LiFePO4-c-010-6-dos.out`两个个文件. `LiFePO4.dos`可用于Origin绘制态密度图.用Origin绘制态密度如下:
 ![LiFePO4态密度](/assets/image/2026-06-22/LiFePO4-c-010-QE-dos.png)
 
+
+#### 4.3.6 常用后处理
+
+1. 电荷密度
+2. 差分电荷
+3. bder电荷
+4. 电子局域函数
 
 ---
 <font size="4" color="red"><b>这是红色加粗的大号字体</b></font>
