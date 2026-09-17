@@ -67,10 +67,13 @@ total 4.0K
 ```
 
 - 提交任务命令： `qsub -v infile=infilename pbsscriptname.pbs`（注意：infilename不包括.in），例如：
+
 ```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ qsub -v infile=LiFePO4-c-010-dft+u-1-vcrelax runqe-pw.pbs 
 ```
+
 - 查看队列状态： `qstat` 或者 `qstat -a`，例如：
+
 ```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ qstat  -a
 
