@@ -66,6 +66,22 @@ total 4.0K
 -rw-r--r-- 1 msmcquan quansilong 889 6月  24 16:10 runqe-pw.pbs
 ```
 
+- 提交任务命令： `qsub -v infile=infilename pbsscriptname.pbs`（注意：infilename不包括.in），例如：
+```bash
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ qsub -v infile=LiFePO4-c-010-dft+u-1-vcrelax runqe-pw.pbs 
+```
+- 查看队列状态： `qstat` 或者 `qstat -a`，例如：
+```
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ qstat  -a
+
+inspur-NF5468M5: 
+                                                                                  Req'd       Req'd       Elap
+Job ID                  Username    Queue    Jobname          SessID  NDS   TSK   Memory      Time    S   Time
+----------------------- ----------- -------- ---------------- ------ ----- ------ --------- --------- - ---------
+93.inspur-NF5468M5      quansilong  batch    QuantumEspresso  313217     1     12       --  720:00:00 R  01:07:44
+```
+- 结束运行任务： `qdel JobID`
+
 
 ## 4 Quantum ESPRESSO计算
 ### 4.1 Quantum ESPRESSO介绍
