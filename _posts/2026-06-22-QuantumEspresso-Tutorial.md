@@ -45,17 +45,19 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ pwd
 ## 3 准备PBS队列系统提交脚本
 `PBS（Protable Batch System）`是功能最为齐全，历史最悠久，支持最广泛的本地集群调度器之一。 PBS的目前包括OpenPBS，PBS Pro和Torque三个主要分支。其中OpenPBS是最早的PBS系统，目前已经没有太多后续开发，PBS pro是PBS的商业版本，功能最为丰富。`Torque`是Clustering公司接过了OpenPBS，并给与后续支持的一个开源版本。
 
-`Torque`作为一款开源免费的PBS排队管理系统，被许多使用服务器和集群的小组广泛使用。课题组服务器上已经部署好 `Torque PBS`任务排队管理系统。PBS队列系统提交脚本 `runqe-pw.pbs`我已写好，已上传到我的个人文件夹中。
+`Torque`作为一款开源免费的PBS排队管理系统，被许多使用服务器和集群的小组广泛使用。课题组服务器上已经部署好 `Torque PBS`任务排队管理系统。PBS队列系统提交脚本 `runqe-pw.pbs`、 `runqe-bands.pbs`、 `runqe-dos.pbs`我已写好，已上传到我的个人文件夹中。
+
+注： `runqe-pw.pbs`提交采用 `pw.x`作计算的任务,  `runqe-bands.pbs`提交采用 `bands.x`作计算的任务,  `runqe-dos.pbs`提交采用 `dos.x`作计算的任务。
 
 ```bash
-msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ ll ..
-total 12
-drwxr-xr-x 2 msmcquan quansilong 4096 6月  24 09:39 LiFePO4-c-010-2x1x2-vac-QE/
-drwxr-xr-x 2 msmcquan quansilong 4096 6月  24 09:40 LiFePO4-c-010-QE/
--rw-r--r-- 1 msmcquan quansilong  889 6月  24 15:20 runqe-pw.pbs
+msmcquan@inspur-NF5468M5:~/quansilong/pbs-script$ ll
+total 12K
+-rw-r--r-- 1 msmcquan quansilong 939 9月  12 17:29 runqe-bands.pbs
+-rw-r--r-- 1 msmcquan quansilong 937 9月  12 17:29 runqe-dos.pbs
+-rw-r--r-- 1 msmcquan quansilong 889 9月  16 16:21 runqe-pw.pbs
 ```
 
-计算时，需要将PBS队列系统提交脚本 `runqe-pw.pbs`复制到自己计算的工作目录。如本教程中，需要将PBS队列系统提交脚本 `runqe-pw.pbs`复制到工作目录 `LiFePO4-c-010-QE/`中。
+计算时，需要将PBS队列系统提交脚本 `runqe-pw.pbs`、 `runqe-bands.pbs`或者 `runqe-dos.pbs`复制到自己计算的工作目录。如本教程中，采用 `pw.x`作计算时需要将PBS队列系统提交脚本 `runqe-pw.pbs`复制到工作目录 `LiFePO4-c-010-QE/`中。
 
 ```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ cp ../runqe-pw.pbs .
@@ -479,16 +481,17 @@ nz = 32
 #### 4.2.2 Quantum ESPRESSO赝势
 Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) pseudopotentials (PPs) and Norm-Conserving (NC) PPs in separable (Kleinman-Bylander) form. Some calculations (e.g. meta-GGA functionals, Gamma-only phonon, third-order energy derivatives: Raman, anharmonic force constants) work only with NC PPs; CP does not yet support PAW.
 
-赝势一般名命规则如下图所示:
+- An excellent resource for PPs is Standard Solid State PPs ([SSSP](https://sssp.materialscloud.org/pseudopotentials/PBE/efficiency)), a collection of the best verified PPs, maintained by THEOS and MARVEL on the [Materials Cloud](https://www.materialscloud.org/).（**无特殊要求,建议采用[SSSP](https://sssp.materialscloud.org/pseudopotentials/PBE/efficiency)赝势**）
+
+- Ready-to-use PP tables are available [here](https://pseudopotentials.quantum-espresso.org/legacy_tables).
+
+赝势名命有一定的规则，如PSlibrary赝势一般名命规则如下图所示:
 <img src="/assets/image/2026-06-22/naming-PPs.png" 
      alt="naming-PPs" 
      width="80%"
      height="80%" 
      style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
 
-- An excellent resource for PPs is Standard Solid State PPs ([SSSP](https://sssp.materialscloud.org/pseudopotentials/PBE/efficiency)), a collection of the best verified PPs, maintained by THEOS and MARVEL on the [Materials Cloud](https://www.materialscloud.org/).（**无特殊要求,建议采用[SSSP](https://sssp.materialscloud.org/pseudopotentials/PBE/efficiency)赝势**）
-
-- Ready-to-use PP tables are available [here](https://pseudopotentials.quantum-espresso.org/legacy_tables).
 
 - 其他赝势：
     - [DOJO pseudopotential](https://www.pseudo-dojo.org/)
