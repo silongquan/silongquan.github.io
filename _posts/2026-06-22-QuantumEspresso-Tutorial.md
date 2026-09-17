@@ -71,7 +71,7 @@ total 4.0K
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ qsub -v infile=LiFePO4-c-010-dft+u-1-vcrelax runqe-pw.pbs 
 ```
 - 查看队列状态： `qstat` 或者 `qstat -a`，例如：
-```
+```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ qstat  -a
 
 inspur-NF5468M5: 
@@ -80,6 +80,7 @@ Job ID                  Username    Queue    Jobname          SessID  NDS   TSK 
 ----------------------- ----------- -------- ---------------- ------ ----- ------ --------- --------- - ---------
 93.inspur-NF5468M5      quansilong  batch    QuantumEspresso  313217     1     12       --  720:00:00 R  01:07:44
 ```
+
 - 结束运行任务： `qdel JobID`
 
 
