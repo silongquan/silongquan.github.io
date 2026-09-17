@@ -681,11 +681,23 @@ Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) 
  5 2 4 0 0 0
 ```
 
-后台运行命令及运行状态查看如下:
+可采用PBS队列系统提交脚本或者后台运行命令提交任务:
+- PBS队列系统提交脚本提交任务(推荐)：
+
+```bash
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ qsub -v infile=LiFePO4-c-010-1-vcrelax runqe-pw.pbs
+```
+
+- 后台运行命令提交任务:
+
 ```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 pw.x < LiFePO4-c-010-1-vcrelax.in > LiFePO4-c-010-1-vcrelax.out &
 [1] 3785504
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup: redirecting stderr to stdout
+```
+
+运行状态查看如下:
+```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ ll
 total 4.4M
 -rw-r--r-- 1 msmcquan quansilong 1.9M 7月  23 15:31 Fe.pbe-spn-kjpaw_psl.0.2.1.UPF
