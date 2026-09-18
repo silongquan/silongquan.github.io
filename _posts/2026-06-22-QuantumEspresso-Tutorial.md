@@ -548,7 +548,7 @@ nz = 32
 #### 4.2.2 Quantum ESPRESSO赝势
 Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) pseudopotentials (PPs) and Norm-Conserving (NC) PPs in separable (Kleinman-Bylander) form. Some calculations (e.g. meta-GGA functionals, Gamma-only phonon, third-order energy derivatives: Raman, anharmonic force constants) work only with NC PPs; CP does not yet support PAW.
 
-- An excellent resource for PPs is Standard Solid State PPs ([SSSP](https://sssp.materialscloud.org/pseudopotentials/PBE/efficiency)), a collection of the best verified PPs, maintained by THEOS and MARVEL on the [Materials Cloud](https://www.materialscloud.org/).（**无特殊要求,建议采用[SSSP](https://sssp.materialscloud.org/pseudopotentials/PBE/efficiency)赝势**）
+- An excellent resource for PPs is Standard Solid State PPs ([SSSP 2.0](https://sssp.materialscloud.org/pseudopotentials/PBE/efficiency) [SSSP 1.3](https://legacy.materialscloud.org/discover/sssp/table/efficiency)), a collection of the best verified PPs, maintained by THEOS and MARVEL on the [Materials Cloud](https://www.materialscloud.org/).（**无特殊要求,建议采用[SSSP 2.0](https://sssp.materialscloud.org/pseudopotentials/PBE/efficiency)赝势**）
 
 - Ready-to-use PP tables are available [here](https://pseudopotentials.quantum-espresso.org/legacy_tables).
 
@@ -646,7 +646,7 @@ Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) 
   在结构驰豫（ `calculation='relax'`）过程中， `ATOMIC_POSITIONS`是根据力而变化的，如果是 `vc-relax`，原子坐标改变的同时， `CELL_PARAMETERS`根据应力变化（celldm在relax时是不变的）。
 
 
-下载**[SSSP](https://legacy.materialscloud.org/discover/sssp/table/efficiency)赝势**,将Li、Fe、P和O元素的赝势复制并上传到工作目录.
+下载 **[SSSP 2.0](https://sssp.materialscloud.org/pseudopotentials/PBE/efficiency)赝势** ,将Li、Fe、P和O元素的赝势复制并上传到工作目录。
 
 
 结构优化输入文件 `LiFePO4-c-010-1-vcrelax.in`如下:
