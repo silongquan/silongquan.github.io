@@ -596,7 +596,7 @@ Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) 
   
   pw.x的初始晶体结构及晶格参数通常是实验值。但是，为了后续的计算可能需要通过力和应力的弛豫（vc-relax）得到晶格参数的理论值（如果只计算体材料能带，而所关心的问题只限于电子性质而无关晶格，使用实验值也是可以的）。
   
-  在结构驰豫（calculation='relax'）过程中，ATOMIC_POSITIONS是根据力而变化的，如果是vc-relax，原子坐标改变的同时，CELL_PARAMETERS根据应力变化（celldm在relax时是不变的）。
+  在结构驰豫（ `calculation='relax'`）过程中， `ATOMIC_POSITIONS`是根据力而变化的，如果是 `vc-relax`，原子坐标改变的同时， `CELL_PARAMETERS`根据应力变化（celldm在relax时是不变的）。
 
 
 下载**[SSSP](https://legacy.materialscloud.org/discover/sssp/table/efficiency)赝势**,将Li、Fe、P和O元素的赝势复制并上传到工作目录.
@@ -811,7 +811,7 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ grep '!' LiFePO4-c-010-1
 
 #### 4.3.3 自洽计算
 
-由于pw.x约定：在同一目录，并保持outdir、prefix一致时，先运行vc-relax、relax计算，在接着的scf、nscf、bands计算会读取之前弛豫后的结构，而忽略此时的结构设置。所以，此时做scf计算，修改的地方是：将calculation='vc-relax'改成calculation='scf'，其他部分与上一步输入文件相同。但是为了确保计算可靠,可将vc-relax计算后的CELL_PARAMETERS和ATOMIC_POSITIONS更新到自洽计算的输入文件。另外，vc-relax和relax计算最后一步包含了最终结构的scf计算，即vc-relax后面可以直接跟着bands计算，可省去自洽计算这一步骤。这里考虑计算严谨性，再进行一次自洽计算。
+由于pw.x约定：在同一目录，并保持outdir、prefix一致时，先运行vc-relax、relax计算，在接着的scf、nscf、bands计算会读取之前弛豫后的结构，而忽略此时的结构设置。所以，此时做scf计算，修改的地方是：将 `calculation='vc-relax'`改成 `calculation='scf'`，其他部分与上一步输入文件相同。但是为了确保计算可靠,可将vc-relax计算后的 `CELL_PARAMETERS`和 `ATOMIC_POSITIONS`更新到自洽计算的输入文件。另外，vc-relax和relax计算最后一步包含了最终结构的scf计算，即vc-relax后面可以直接跟着bands计算，可省去自洽计算这一步骤。这里考虑计算严谨性，再进行一次自洽计算。
 
 复制结构优化的输入文件 `LiFePO4-c-010-1-vcrelax.in`,并重命名为 `LiFePO4-c-010-2-scf.in`:
 ```bash
@@ -1133,7 +1133,7 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ cp LiFePO4-c-010-2-scf.i
   0.5 0.5 0.5 1
 ```
 
-和前面计算一样，任务提交有两种方法，一种方法是采用PBS队列系统提交脚本，另外一种方法是后台运行命令提交任务:
+同样，任务提交有两种方法，一种方法是采用PBS队列系统提交脚本，另外一种方法是后台运行命令提交任务:
 - **方法一** PBS队列系统提交脚本提交任务(**服务器推荐使用**)：
 
 ```bash
@@ -1174,7 +1174,7 @@ lp=.true.
 /
 ```
 
-和前面计算一样，任务提交有两种方法，一种方法是采用PBS队列系统提交脚本，另外一种方法是后台运行命令提交任务:
+同样，任务提交有两种方法，一种方法是采用PBS队列系统提交脚本，另外一种方法是后台运行命令提交任务:
 - **方法一** PBS队列系统提交脚本提交任务(**服务器推荐使用**)：
 
 ```bash
@@ -1275,7 +1275,7 @@ drwxr-xr-x 3 msmcquan quansilong 4.0K 7月  26 12:00 tmp/
 
 #### 4.3.5 态密度计算
 
-态密度(DOS)计算前为计算得到的态密度光滑准确,需做一次k点加密的非自洽计算(nscf).复制自洽计算的输入文件 `LiFePO4-c-010-2-scf.in`,并重命名为 `LiFePO4-c-010-5-nscf.in`:
+态密度(DOS)计算前为计算得到的态密度光滑准确,需做一次k点加密（**可选，非必须**）的非自洽计算(nscf)，另外态密度(DOS)计算建议将occupations设置为 `occupations = 'tetrahedra'`。复制自洽计算的输入文件 `LiFePO4-c-010-2-scf.in`,并重命名为 `LiFePO4-c-010-5-nscf.in`:
 
 ```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ cp LiFePO4-c-010-2-scf.in LiFePO4-c-010-5-nscf.in
@@ -1302,7 +1302,7 @@ drwxr-xr-x 3 msmcquan quansilong 4.0K 7月  26 12:00 tmp/
 -rw-r--r-- 1 msmcquan quansilong  889 6月  24 16:10 runqe-pw.pbs
 ```
 
-接着修改复制的 `LiFePO4-c-010-5-nscf.in`中 `calculation     = 'nscf'`和K_POINTS网格加密到15x6x12(如果计算过慢,可适当考虑减小k点密度)。nscf计算输入文件 `LiFePO4-c-010-5-nscf.in`如下:
+接着修改复制的 `LiFePO4-c-010-5-nscf.in`中 `calculation     = 'nscf'`，  `occupations = 'tetrahedra'`和K_POINTS网格加密到15x6x12(**可选，如果计算过慢,可适当考虑减小k点密度**)。nscf计算输入文件 `LiFePO4-c-010-5-nscf.in`如下:
 ```
  &CONTROL
    calculation     = 'nscf'
@@ -1321,9 +1321,10 @@ drwxr-xr-x 3 msmcquan quansilong 4.0K 7月  26 12:00 tmp/
    ntyp            = 4
    ecutwfc         = 90.0
    ecutrho         = 1080.0
-   occupations     = 'smearing'
-   degauss         = 0.005
-   smearing        = 'gaussian'
+   occupations = 'tetrahedra'
+   ！occupations     = 'smearing'
+   ！degauss         = 0.005
+   ！smearing        = 'gaussian'
    vdw_corr        = 'grimme-d3'
    dftd3_version   = 3
  /
@@ -1385,12 +1386,36 @@ drwxr-xr-x 3 msmcquan quansilong 4.0K 7月  26 12:00 tmp/
  15 6 12 0 0 0
 ```
 
-运行程序及运行状态查看:
+同样，任务提交有两种方法，一种方法是采用PBS队列系统提交脚本，另外一种方法是后台运行命令提交任务:
+- **方法一** PBS队列系统提交脚本提交任务(**服务器推荐使用**)：
+
+```bash
+msmcquan@inspur-NF5468M5:~/quansilong/work/LiFePO4-c-010-QE$ qsub -v infile=LiFePO4-c-010-5-nscf runqe-pw.pbs 
+105.inspur-NF5468M5
+```
+
+提交任务后可采用 `qstat`或者`qstat -a`查看任务状态。
+```bash
+msmcquan@inspur-NF5468M5:~/quansilong/work/LiFePO4-c-010-QE$ qstat -a
+
+inspur-NF5468M5: 
+                                                                                  Req'd       Req'd       Elap
+Job ID                  Username    Queue    Jobname          SessID  NDS   TSK   Memory      Time    S   Time
+----------------------- ----------- -------- ---------------- ------ ----- ------ --------- --------- - ---------
+105.inspur-NF5468M5     msmcquan    batch    QuantumEspresso  399624     1     12       --  720:00:00 R  00:00:13
+```
+
+- **方法二** 后台运行命令提交任务（**服务器上不建议使用，自己本地电脑使用**）:
+
 ```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 pw.x < LiFePO4-c-010-5-nscf.in > LiFePO4-c-010-5-nscf.out &
 [1] 3217129
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup: redirecting stderr to stdout
 
+```
+
+运行状态查看:
+```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-5-nscf.out 
      ./tmp/LiFePO4-c-010.save/charge-density
 
@@ -1433,38 +1458,75 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ vi LiFePO4-c-010-6-dos.i
 &DOS
  prefix='LiFePO4-c-010',
  outdir='./tmp'
- ngauss=1
- degauss=1.5d-2
- DeltaE=1.0d-2
+ ! ngauss=1
+ ! degauss=1.5d-2
+ ! DeltaE=1.0d-2
  fildos='LiFePO4.dos'
 /
 ```
+同样，任务提交有两种方法，一种方法是采用PBS队列系统提交脚本，另外一种方法是后台运行命令提交任务:
+- **方法一** PBS队列系统提交脚本提交任务(**服务器推荐使用**)：
 
-运行 `dos.x`后处理程序及运行状态查看:
+```bash
+msmcquan@inspur-NF5468M5:~/quansilong/work/LiFePO4-c-010-QE$ qsub -v infile=LiFePO4-c-010-6-dos runqe-dos.pbs 
+106.inspur-NF5468M5
+```
+
+提交任务后可采用 `qstat`或者`qstat -a`查看任务状态。
+```bash
+msmcquan@inspur-NF5468M5:~/quansilong/work/LiFePO4-c-010-QE$ qstat -a
+
+inspur-NF5468M5: 
+                                                                                  Req'd       Req'd       Elap
+Job ID                  Username    Queue    Jobname          SessID  NDS   TSK   Memory      Time    S   Time
+----------------------- ----------- -------- ---------------- ------ ----- ------ --------- --------- - ---------
+106.inspur-NF5468M5     msmcquan    batch    QuantumEspresso  408716     1     12       --  720:00:00 R  00:00:06
+```
+
+- **方法二** 后台运行命令提交任务（**服务器上不建议使用，自己本地电脑使用**）:
+
 ```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 dos.x < LiFePO4-c-010-6-dos.in > LiFePO4-c-010-6-dos.out &
 [1] 3523969
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup: redirecting stderr to stdout
 
-msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-6-dos.out 
-[inspur-NF5468M5:3523969] 11 more processes have sent help message help-mpi-btl-openib.txt / no active ports found
+```
 
-     DOS          :      7.47s CPU      7.93s WALL
+`dos.x`后处理程序运行状态查看:
+
+```bash
+msmcquan@inspur-NF5468M5:~/quansilong/work/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-6-dos.out 
+     Max        1168     390    108                88624    17060    2465
+     Sum       14009    4677   1285              1063481   204697   29579
+
+     Using Slab Decomposition
 
 
-   This run was terminated on:  19:46:54  26Jul2026            
+     Check: negative core charge=   -0.000003
+
+     Tetrahedra used
+
+
+     DOS          :     31.00s CPU     31.37s WALL
+
+
+   This run was terminated on:  12:59:44  18Sep2026            
 
 =------------------------------------------------------------------------------=
    JOB DONE.
 =------------------------------------------------------------------------------=
-msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$  ll -th
+msmcquan@inspur-NF5468M5:~/quansilong/work/LiFePO4-c-010-QE$ ll -th
 total 17M
--rw-r--r-- 1 msmcquan quansilong 3.7K 7月  26 19:46 LiFePO4-c-010-6-dos.out
--rw-r--r-- 1 msmcquan quansilong 306K 7月  26 19:46 LiFePO4.dos
--rw-r--r-- 1 msmcquan quansilong  111 7月  26 19:42 LiFePO4-c-010-6-dos.in
--rw-r--r-- 1 msmcquan quansilong  21K 7月  26 19:20 LiFePO4-c-010-5-nscf.out
-drwxr-xr-x 3 msmcquan quansilong 4.0K 7月  26 19:20 tmp/
--rw-r--r-- 1 msmcquan quansilong 3.3K 7月  26 17:00 LiFePO4-c-010-5-nscf.in
+-rw------- 1 msmcquan quansilong  182 9月  18 12:59 out
+-rw------- 1 msmcquan quansilong 2.4K 9月  18 12:59 err
+-rw-r--r-- 1 msmcquan quansilong 2.0K 9月  18 12:59 LiFePO4-c-010-6-dos.out
+-rw-r--r-- 1 msmcquan quansilong 302K 9月  18 12:59 LiFePO4.dos
+-rw-r--r-- 1 msmcquan quansilong  937 9月  18 12:58 runqe-dos.pbs
+-rw-r--r-- 1 msmcquan quansilong  114 9月  18 12:56 LiFePO4-c-010-6-dos.in
+-rw-r--r-- 1 msmcquan quansilong  19K 9月  18 12:27 LiFePO4-c-010-5-nscf.out
+drwxr-xr-x 3 msmcquan quansilong 4.0K 9月  18 12:27 tmp/
+-rw-r--r-- 1 msmcquan quansilong  889 9月  18 10:48 runqe-pw.pbs
+-rw-r--r-- 1 msmcquan quansilong 3.3K 9月  18 10:45 LiFePO4-c-010-5-nscf.in
 -rw-r--r-- 1 msmcquan quansilong 251K 7月  26 12:00 LiFePO4-c-010-4-bands.out
 -rw-r--r-- 1 msmcquan quansilong 9.9M 7月  26 12:00 p_avg.dat
 -rw-r--r-- 1 msmcquan quansilong 119K 7月  26 11:59 bd.dat.rap
@@ -1481,7 +1543,6 @@ drwxr-xr-x 3 msmcquan quansilong 4.0K 7月  26 19:20 tmp/
 -rw-r--r-- 1 msmcquan quansilong 1.9M 7月  23 15:31 Fe.pbe-spn-kjpaw_psl.0.2.1.UPF
 -rw-r--r-- 1 msmcquan quansilong 374K 7月  23 15:31 li_pbe_v1.4.uspp.F.UPF
 -rw-r--r-- 1 msmcquan quansilong 2.6K 6月  30 14:15 LiFePO4-c-010-1-vcrelax.in
--rw-r--r-- 1 msmcquan quansilong  889 6月  24 16:10 runqe-pw.pbs
 ```
 
 `dos.x`任务结束后，将在工作目录产生 `LiFePO4.dos`和 `LiFePO4-c-010-6-dos.out`两个个文件. `LiFePO4.dos`可用于Origin绘制态密度图.用Origin绘制态密度如下:
