@@ -66,6 +66,8 @@ total 4.0K
 -rw-r--r-- 1 msmcquan quansilong 889 6月  24 16:10 runqe-pw.pbs
 ```
 
+---
+
 - 提交任务命令： `qsub -v infile=infilename pbsscriptname.pbs`（**注意：infilename不包括.in**），例如：
 
 ```bash
@@ -86,7 +88,7 @@ Job ID                  Username    Queue    Jobname          SessID  NDS   TSK 
 
 "Job ID"列为任务ID，如上述任务ID为93；
 
-“S”列为任务运行状态（R表示正在运行，C表示完成，Q表示排队等待），如上述任务运行状态为正在运行。
+“S”列为任务运行状态（‘R’表示正在运行，‘C’表示完成，‘Q’表示排队等待），如上述任务运行状态为正在运行。
 
 - 结束运行任务： `qdel JobID` （JobID为"Job ID"列的数字）
 
@@ -365,6 +367,7 @@ Check Doc/Hubbard_input.pdf for more details. ]
  5 2 4 0 0 0
 ```
 
+---
 
 - `bands.x`(band structure postprocessing)输入文件结构如下，具体参考 `bands.x`手册([https://www.quantum-espresso.org/Doc/INPUT_BANDS.html](https://www.quantum-espresso.org/Doc/INPUT_BANDS.html)):
 
@@ -412,6 +415,8 @@ lp=.true.
 /
 ```
 
+---
+
 - `dos.x`(DOS postprocessing)输入文件结构如下，具体参考 `dos.x`手册（[https://www.quantum-espresso.org/Doc/INPUT_DOS.html](https://www.quantum-espresso.org/Doc/INPUT_DOS.html)）：
 
 ```
@@ -442,6 +447,8 @@ IMPORTANT: since v.5 namelist name is &DOS and no longer &INPUTPP
  fildos='LiFePO4-c-010.dos'
 /
 ```
+
+---
 
 - `pp.x`输入文件结构如下，具体参考 `pp.x`手册（[https://www.quantum-espresso.org/Doc/INPUT_PP.html](https://www.quantum-espresso.org/Doc/INPUT_PP.html)）：
 
@@ -568,6 +575,8 @@ Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) 
   
   构建计算模型的cif格式文件或者可转为Quantum ESPRESSO计算输入文件的其他格式文件后,借助[`Quantum ESPRESSO input generator and structure visualizer`](https://qeinputgenerator.materialscloud.io/)和[QEtoolkit](https://www.densityflow.com/)中[`cif转为pw.x输入文件`](https://www.densityflow.com/cif2qe.php)在线工具产生 `pw.x`结构优化的输入文件，然后根据需要进行稍微修改。
 
+---
+
   `pw.x`处理的计算包括以下7种类型，在输入文件中用calculation设置：
   
   'scf'：自洽计算，self-consistent field，通过迭代的方式数值求解微分-积分方程（Kohn-Sham方程），迭代收敛以电荷的变化足够小为准，最终得到自洽电荷。
@@ -584,6 +593,8 @@ Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) 
   'md'：分子动力学，将电子对离子的作用看成离子感受到的势，根据势能和离子初始速度求解离子运动的经典力学方程。
   
   'vc-md'：允许cell改变的md。
+
+---
 
   pw.x的输入说明见INPUT_PW。注意默认的单位，其中原子单位制为（以下数值见源程序qe-7.5/Modules/constants.f90）：
 
@@ -685,6 +696,8 @@ Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) 
  5 2 4 0 0 0
 ```
 
+---
+
 任务提交有两种方法，一种方法是采用PBS队列系统提交脚本，另外一种方法是后台运行命令提交任务:
 - **方法一** PBS队列系统提交脚本提交任务(**服务器推荐使用**)：
 
@@ -702,6 +715,8 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 pw.x
 [1] 3785504
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup: redirecting stderr to stdout
 ```
+
+---
 
 任务提交后，运行状态查看如下:
 ```bash
@@ -819,6 +834,7 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ cp LiFePO4-c-010-1-vcrel
 ```
 
 接着修改复制的 `LiFePO4-c-010-2-scf.in`中的 `calculation     = 'scf'`、 CELL_PARAMETERS和ATOMIC_POSITIONS标签中的内容。自洽计算输入文件 `LiFePO4-c-010-2-scf.in`如下:
+
 ```
  &CONTROL
    calculation     = 'scf'
@@ -901,6 +917,8 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ cp LiFePO4-c-010-1-vcrel
  5 2 4 0 0 0
 ```
 
+---
+
 和前面计算一样，任务提交有两种方法，一种方法是采用PBS队列系统提交脚本，另外一种方法是后台运行命令提交任务:
 - **方法一** PBS队列系统提交脚本提交任务(**服务器推荐使用**)：
 
@@ -919,6 +937,8 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 pw.x
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup: redirecting stderr to stdout
 
 ```
+
+---
 
 任务提交后，运行状态查看如下:
 ```bash
@@ -1133,6 +1153,8 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ cp LiFePO4-c-010-2-scf.i
   0.5 0.5 0.5 1
 ```
 
+---
+
 同样，任务提交有两种方法，一种方法是采用PBS队列系统提交脚本，另外一种方法是后台运行命令提交任务:
 - **方法一** PBS队列系统提交脚本提交任务(**服务器推荐使用**)：
 
@@ -1152,6 +1174,8 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup: redirecting stder
 
 ```
 
+---
+
 任务提交后，运行状态查看如下:
 ```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-3-nscf-b.out 
@@ -1164,6 +1188,8 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-3-
      Davidson diagonalization with overlap
 ```
 
+---
+
 能带计算完后需要采用 `bands.x`进行能带后处理. 新建 `bands.x`能带后处理输入文件,文件名命为 `LiFePO4-c-010-4-bands.in`, `LiFePO4-c-010-4-bands.in`如下:
 ```
 &BANDS
@@ -1173,6 +1199,8 @@ filband='bd.dat'
 lp=.true.
 /
 ```
+
+---
 
 同样，任务提交有两种方法，一种方法是采用PBS队列系统提交脚本，另外一种方法是后台运行命令提交任务:
 - **方法一** PBS队列系统提交脚本提交任务(**服务器推荐使用**)：
@@ -1192,6 +1220,8 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 band
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup: redirecting stderr to stdout
 
 ```
+
+---
 
 查看 `bands.x`后处理程序运行状态:
 ```bash
@@ -1267,6 +1297,8 @@ drwxr-xr-x 3 msmcquan quansilong 4.0K 7月  26 12:00 tmp/
 -rw-r--r-- 1 msmcquan quansilong 2.6K 6月  30 14:15 LiFePO4-c-010-1-vcrelax.in
 -rw-r--r-- 1 msmcquan quansilong  889 6月  24 16:10 runqe-pw.pbs
 ```
+
+---
 
 `bands.x`任务结束后，将在工作目录产生 `bd.dat`、 `bd.dat.rap`、 `bd.dat.gnu`、 `p_avg.dat`和 `LiFePO4-c-010-4-bands.out`五个文件.在 `bd.bat`中有能带数据，可以通过QE自带的 `plotband.x`绘制能带图,但是画图的自定义效果不够;也可以编写python代码用python绘制能带图.
  `bd.dat.gnu`可用于Origin绘制能带图,自定义效果较好.用Origin绘制能带如下:
@@ -1386,6 +1418,8 @@ drwxr-xr-x 3 msmcquan quansilong 4.0K 7月  26 12:00 tmp/
  15 6 12 0 0 0
 ```
 
+---
+
 同样，任务提交有两种方法，一种方法是采用PBS队列系统提交脚本，另外一种方法是后台运行命令提交任务:
 - **方法一** PBS队列系统提交脚本提交任务(**服务器推荐使用**)：
 
@@ -1413,6 +1447,8 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 pw.x
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup: redirecting stderr to stdout
 
 ```
+
+---
 
 运行状态查看:
 ```bash
@@ -1447,6 +1483,7 @@ smcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -20 LiFePO4-c-010-5-
 =------------------------------------------------------------------------------=
 ```
 
+---
 
 nscf非自洽计算完成后,运行 `dos.x`进行态密度DOS后处理.新建 `dos.x`态密度后处理输入文件,文件名命为 `LiFePO4-c-010-6-dos.in`, 
 ```bash
@@ -1464,6 +1501,9 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ vi LiFePO4-c-010-6-dos.i
  fildos='LiFePO4.dos'
 /
 ```
+
+---
+
 同样，任务提交有两种方法，一种方法是采用PBS队列系统提交脚本，另外一种方法是后台运行命令提交任务:
 - **方法一** PBS队列系统提交脚本提交任务(**服务器推荐使用**)：
 
@@ -1491,6 +1531,8 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 dos.
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup: redirecting stderr to stdout
 
 ```
+
+---
 
 `dos.x`后处理程序运行状态查看:
 
@@ -1544,6 +1586,8 @@ drwxr-xr-x 3 msmcquan quansilong 4.0K 9月  18 12:27 tmp/
 -rw-r--r-- 1 msmcquan quansilong 374K 7月  23 15:31 li_pbe_v1.4.uspp.F.UPF
 -rw-r--r-- 1 msmcquan quansilong 2.6K 6月  30 14:15 LiFePO4-c-010-1-vcrelax.in
 ```
+
+---
 
 `dos.x`任务结束后，将在工作目录产生 `LiFePO4.dos`和 `LiFePO4-c-010-6-dos.out`两个个文件. `LiFePO4.dos`可用于Origin绘制态密度图.用Origin绘制态密度如下:
 ![LiFePO4态密度](/assets/image/2026-06-22/LiFePO4-c-010-QE-dos.png)
