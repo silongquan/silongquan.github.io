@@ -66,7 +66,7 @@ total 4.0K
 -rw-r--r-- 1 msmcquan quansilong 889 6月  24 16:10 runqe-pw.pbs
 ```
 
-- 提交任务命令： `qsub -v infile=infilename pbsscriptname.pbs`（注意：infilename不包括.in），例如：
+- 提交任务命令： `qsub -v infile=infilename pbsscriptname.pbs`（**注意：infilename不包括.in**），例如：
 
 ```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ qsub -v infile=LiFePO4-c-010-dft+u-1-vcrelax runqe-pw.pbs 
@@ -84,7 +84,11 @@ Job ID                  Username    Queue    Jobname          SessID  NDS   TSK 
 93.inspur-NF5468M5      quansilong  batch    QuantumEspresso  313217     1     12       --  720:00:00 R  01:07:44
 ```
 
-- 结束运行任务： `qdel JobID`
+"Job ID"列为任务ID，如上述任务ID为93；
+
+“S”列为任务运行状态（R表示正在运行，C表示完成，Q表示排队等待），如上述任务运行状态为正在运行。
+
+- 结束运行任务： `qdel JobID` （JobID为"Job ID"列的数字）
 
 
 ## 4 Quantum ESPRESSO计算
@@ -681,14 +685,17 @@ Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) 
  5 2 4 0 0 0
 ```
 
-可采用PBS队列系统提交脚本或者后台运行命令提交任务:
-- PBS队列系统提交脚本提交任务(推荐)：
+任务提交有两种方法，一种方法是采用PBS队列系统提交脚本，另外一种方法是后台运行命令提交任务:
+- **方法一** PBS队列系统提交脚本提交任务(**服务器推荐使用**)：
 
 ```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ qsub -v infile=LiFePO4-c-010-1-vcrelax runqe-pw.pbs
 ```
 
-- 后台运行命令提交任务:
+提交任务后可采用 `qstat`或者`qstat -a`查看任务状态。
+
+
+- **方法二** 后台运行命令提交任务（**服务器上不建议使用，自己本地电脑使用**）:
 
 ```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 pw.x < LiFePO4-c-010-1-vcrelax.in > LiFePO4-c-010-1-vcrelax.out &
@@ -696,7 +703,7 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 pw.x
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup: redirecting stderr to stdout
 ```
 
-运行状态查看如下:
+任务提交后，运行状态查看如下:
 ```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ ll
 total 4.4M
@@ -894,12 +901,27 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ cp LiFePO4-c-010-1-vcrel
  5 2 4 0 0 0
 ```
 
-运行程序及运行状态查看:
+和前面计算一样，任务提交有两种方法，一种方法是采用PBS队列系统提交脚本，另外一种方法是后台运行命令提交任务:
+- **方法一** PBS队列系统提交脚本提交任务(**服务器推荐使用**)：
+
+```bash
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ qsub -v infile=LiFePO4-c-010-2-scf runqe-pw.pbs
+```
+
+提交任务后可采用 `qstat`或者`qstat -a`查看任务状态。
+
+
+- **方法二** 后台运行命令提交任务（**服务器上不建议使用，自己本地电脑使用**）:
+
 ```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 pw.x < LiFePO4-c-010-2-scf.in > LiFePO4-c-010-2-scf.out &
 [1] 6731
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup: redirecting stderr to stdout
 
+```
+
+任务提交后，运行状态查看如下:
+```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-2-scf.out 
 [inspur-NF5468M5:06731] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
 [inspur-NF5468M5:06731] 11 more processes have sent help message help-mpi-btl-openib.txt / no active ports found
@@ -1111,12 +1133,27 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ cp LiFePO4-c-010-2-scf.i
   0.5 0.5 0.5 1
 ```
 
-运行程序及运行状态查看:
+和前面计算一样，任务提交有两种方法，一种方法是采用PBS队列系统提交脚本，另外一种方法是后台运行命令提交任务:
+- **方法一** PBS队列系统提交脚本提交任务(**服务器推荐使用**)：
+
+```bash
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ qsub -v infile=LiFePO4-c-010-3-nscf-b runqe-pw.pbs
+```
+
+提交任务后可采用 `qstat`或者`qstat -a`查看任务状态。
+
+
+- **方法二** 后台运行命令提交任务（**服务器上不建议使用，自己本地电脑使用**）:
+
 ```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 pw.x < LiFePO4-c-010-3-nscf-b.in > LiFePO4-c-010-3-nscf-b.out &
 [1] 47585
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup: redirecting stderr to stdout
 
+```
+
+任务提交后，运行状态查看如下:
+```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-3-nscf-b.out 
      ./tmp/LiFePO4-c-010.save/charge-density
 
@@ -1137,12 +1174,27 @@ lp=.true.
 /
 ```
 
-运行 `bands.x`后处理程序及运行状态查看:
+和前面计算一样，任务提交有两种方法，一种方法是采用PBS队列系统提交脚本，另外一种方法是后台运行命令提交任务:
+- **方法一** PBS队列系统提交脚本提交任务(**服务器推荐使用**)：
+
+```bash
+msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ qsub -v infile=LiFePO4-c-010-4-bands runqe-bands.pbs
+```
+
+提交任务后可采用 `qstat`或者`qstat -a`查看任务状态。
+
+
+- **方法二** 后台运行命令提交任务（**服务器上不建议使用，自己本地电脑使用**）:
+
 ```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup mpirun -np 12 bands.x < LiFePO4-c-010-4-bands.in > LiFePO4-c-010-4-bands.out &
 [1] 3049850
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ nohup: redirecting stderr to stdout
 
+```
+
+查看 `bands.x`后处理程序运行状态:
+```bash
 msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ tail -f LiFePO4-c-010-4-bands.out 
      Sum       14009    4677   1285              1063481   204697   29735
 
