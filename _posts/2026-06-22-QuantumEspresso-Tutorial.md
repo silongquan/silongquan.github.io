@@ -404,7 +404,7 @@ Structure of the input data:
    /
 ```
 
-具体 `bands.x`输入文件如下:
+不考虑自旋耦合时，具体 `bands.x`输入文件如下:
 
 ```
 &BANDS
@@ -412,6 +412,32 @@ prefix='LiFePO4-c-010',
 outdir='tmp'
 filband='bd.dat'
 lp=.true.
+/
+```
+
+如果考虑自旋耦合， `bands.x`可以分别输出自旋向上和自旋向下的能带。
+
+`bands.x`输出自旋向上能带的输入文件如下:
+
+```
+&BANDS
+prefix='LiFePO4-c-010-soc',
+outdir='tmp'
+filband='bd_up.dat'
+lp=.true.
+spin_component = 1
+/
+```
+
+`bands.x`输出自旋向下能带的输入文件如下:
+
+```
+&BANDS
+prefix='LiFePO4-c-010-soc',
+outdir='tmp'
+filband='bd_down.dat'
+lp=.true.
+spin_component = 2
 /
 ```
 
@@ -440,10 +466,20 @@ IMPORTANT: since v.5 namelist name is &DOS and no longer &INPUTPP
 ```
 &DOS 
  prefix='LiFePO4-c-010',
- outdir='tmp'
+ outdir='./tmp'
  ngauss=1
  degauss=1.5d-2
  DeltaE=1.0d-2
+ fildos='LiFePO4-c-010.dos'
+/
+```
+
+当 `occupations = 'tetrahedra'`时，建议去掉高斯展宽设置， `dos.x`输入文件改为如下:
+
+```
+&DOS
+ prefix='LiFePO4-c-010',
+ outdir='./tmp'
  fildos='LiFePO4-c-010.dos'
 /
 ```
