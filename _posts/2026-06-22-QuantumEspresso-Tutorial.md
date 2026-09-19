@@ -1454,6 +1454,8 @@ drwxr-xr-x 3 msmcquan quansilong 4.0K 7月  26 12:00 tmp/
  15 6 12 0 0 0
 ```
 
+**⚠️ 注意：in文件中以“！”开头的行为注释行，程序不读，忽略执行。**
+
 ---
 
 同样，任务提交有两种方法，一种方法是采用PBS队列系统提交脚本，另外一种方法是后台运行命令提交任务:
@@ -1628,7 +1630,7 @@ drwxr-xr-x 3 msmcquan quansilong 4.0K 9月  18 12:27 tmp/
 `dos.x`任务结束后，将在工作目录产生 `LiFePO4.dos`和 `LiFePO4-c-010-6-dos.out`两个个文件. `LiFePO4.dos`可用于Origin绘制态密度图.用Origin绘制态密度如下:
 ![LiFePO4态密度](/assets/image/2026-06-22/LiFePO4-c-010-QE-dos.png)
 
-**如果态密度算的不太理想，可以最后再补做一次k点加密的nscf计算，nscf计算将 occupations设为 `occupations = tetrahedra`；然后再做dos后处理，并将dos计算in文件中高斯展宽的那三行( `ngauss=1, degauss=1.5d-2, DeltaE=1.0d-2`)删掉**
+⚠️ **如果态密度算的不太理想，可以最后再补做一次k点加密的nscf计算，nscf计算将 occupations设为 `occupations = tetrahedra`；然后再做dos后处理，并将dos计算in文件中高斯展宽的那三行( `ngauss=1, degauss=1.5d-2, DeltaE=1.0d-2`)删掉**
 
 
 #### 4.3.6 常用后处理
