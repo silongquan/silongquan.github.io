@@ -292,6 +292,7 @@ Check Doc/Hubbard_input.pdf for more details. ]
    outdir          = './tmp'
    pseudo_dir      = './'
    prefix          = 'LiFePO4-c-010'
+   disk_io         = 'low'
    verbosity       = 'low'
    etot_conv_thr   = 5.D-5
    forc_conv_thr   = 1.D-4
@@ -657,6 +658,7 @@ Quantum ESPRESSO目前支持PAW (Projector-Augmented Wave) sets, Ultrasoft (US) 
    outdir          = './tmp'
    pseudo_dir      = './'
    prefix          = 'LiFePO4-c-010'
+   disk_io         = 'low'
    verbosity       = 'low'
    etot_conv_thr   = 5.D-5
    forc_conv_thr   = 1.D-4
@@ -878,6 +880,7 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ cp LiFePO4-c-010-1-vcrel
    outdir          = './tmp'
    pseudo_dir      = './'
    prefix          = 'LiFePO4-c-010'
+   disk_io         = 'low'
    verbosity       = 'low'
    etot_conv_thr   = 5.D-5
    forc_conv_thr   = 1.D-4
@@ -1095,6 +1098,7 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ cp LiFePO4-c-010-2-scf.i
    outdir          = './tmp'
    pseudo_dir      = './'
    prefix          = 'LiFePO4-c-010'
+   disk_io         = 'low'
    verbosity       = 'low'
    etot_conv_thr   = 5.D-5
    forc_conv_thr   = 1.D-4
@@ -1378,6 +1382,7 @@ drwxr-xr-x 3 msmcquan quansilong 4.0K 7月  26 12:00 tmp/
    outdir          = './tmp'
    pseudo_dir      = './'
    prefix          = 'LiFePO4-c-010'
+   disk_io         = 'low'
    verbosity       = 'low'
    etot_conv_thr   = 5.D-5
    forc_conv_thr   = 1.D-4
