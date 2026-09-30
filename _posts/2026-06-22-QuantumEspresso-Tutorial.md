@@ -442,6 +442,8 @@ spin_component = 2
 /
 ```
 
+**DFT+U时不支持 `lp=.true.`，将 `lp=.true`那行注释掉（此行最前面加个‘！’），或者去掉该行**
+
 ---
 
 - `dos.x`(DOS postprocessing)输入文件结构如下，具体参考 `dos.x`手册（[https://www.quantum-espresso.org/Doc/INPUT_DOS.html](https://www.quantum-espresso.org/Doc/INPUT_DOS.html)）：
@@ -1240,6 +1242,8 @@ lp=.true.
 /
 ```
 
+**⚠️ DFT+U时不支持 `lp=.true.`，将 `lp=.true`那行注释掉（此行最前面加个‘！’），或者去掉该行**
+
 ---
 
 同样，任务提交有两种方法，一种方法是采用PBS队列系统提交脚本，另外一种方法是后台运行命令提交任务:
@@ -1544,6 +1548,8 @@ msmcquan@inspur-NF5468M5:~/quansilong/LiFePO4-c-010-QE$ vi LiFePO4-c-010-6-dos.i
  fildos='LiFePO4.dos'
 /
 ```
+
+**⚠️ nscf计算将 occupations设为 `occupations = tetrahedra`时，在做dos后处理计算in文件中高斯展宽的那三行( `ngauss=1, degauss=1.5d-2, DeltaE=1.0d-2`)删掉或注释掉（此行最前面加个‘！’）**
 
 ---
 
