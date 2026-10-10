@@ -63,6 +63,7 @@ jobs:
           node-version: 20
       - name: Install staticrypt
         run: npm install -g staticrypt
+             staticrypt --version
       - name: Encrypt private pages
         env:
           STATICRYPT_PASSWORD: ${{ secrets.STATICRYPT_PASS }}
@@ -71,25 +72,33 @@ jobs:
           echo "👉 Target site directory: ${SITE_DIR}"
           find "${SITE_DIR}" -name "*.bak" -delete
           echo "🧹 Pre cleaned *.bak"
-      
+
+          # Check template exists
+          if [ ! -f staticrypt-template.html ]; then
+            echo "❌ ERROR: staticrypt-template.html NOT FOUND in repo root!"
+            exit 1
+          fi
+          echo "✅ Template file found"
+
           if [ -d "${SITE_DIR}/posts" ]; then
             echo "🔍 Files to be encrypted:"
-            find "${SITE_DIR}/posts" -type f -name "*.html"
+            find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html"
             
-            # while循环 + --replace 原地覆盖文件
             while IFS= read -r -d '' file; do
               echo "🔐 Encrypting: $file"
-              staticrypt "$file" -p "${STATICRYPT_PASSWORD}" --short --replace --template staticrypt-template.html
+              # default generate file_encrypted.html
+              staticrypt "$file" -p "${STATICRYPT_PASSWORD}" --short --template staticrypt-template.html
+              # replace original file
+              mv "${file%.html}_encrypted.html" "$file"
               rm -f "${file}.bak"
             done < <(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" -print0)
-      
+
             echo "✅ posts博文加密完成"
             ls -la "${SITE_DIR}/posts"
             
-            # 校验第一个文件内容
             FIRST_HTML=$(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" | head -n1)
             echo "📄 Check encrypted html head: ${FIRST_HTML}"
-            head -c 300 "${FIRST_HTML}"
+            head -c 500 "${FIRST_HTML}"
           else
             echo "⚠️ posts dir not found"
           fi
