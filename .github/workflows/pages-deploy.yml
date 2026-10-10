@@ -76,19 +76,18 @@ jobs:
             echo "🔍 Files to be encrypted:"
             find "${SITE_DIR}/posts" -type f -name "*.html"
             
-            # 改用bash循环，不再使用xargs（修复xargs静默不写入的bug）
+            # while循环 + --replace 原地覆盖文件
             while IFS= read -r -d '' file; do
               echo "🔐 Encrypting: $file"
-              staticrypt "$file" -p "${STATICRYPT_PASSWORD}" --short --template staticrypt-template.html
-              # 删除staticrypt生成的bak备份
+              staticrypt "$file" -p "${STATICRYPT_PASSWORD}" --short --replace --template staticrypt-template.html
               rm -f "${file}.bak"
-            done < <(find "${SITE_DIR}/posts" -type f -name "*.html" -print0)
+            done < <(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" -print0)
       
             echo "✅ posts博文加密完成"
             ls -la "${SITE_DIR}/posts"
             
             # 校验第一个文件内容
-            FIRST_HTML=$(find "${SITE_DIR}/posts" -type f -name "*.html" | head -n1)
+            FIRST_HTML=$(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" | head -n1)
             echo "📄 Check encrypted html head: ${FIRST_HTML}"
             head -c 300 "${FIRST_HTML}"
           else
