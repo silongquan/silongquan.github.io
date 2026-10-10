@@ -104,15 +104,15 @@ jobs:
               rm -f encrypt.err
             done < <(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" -print0)
 
-          echo "✅ posts博文加密 completed"
-          ls -la "${SITE_DIR}/posts/gpt-api/"
-          
-          FIRST_HTML=$(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" | head -n1)
-          echo "📄 Check encrypted html head: ${FIRST_HTML}"
-          head -c 500 "${FIRST_HTML}"
-        else
-          echo "⚠️ posts dir not found"
-        fi
+            echo "✅ posts博文加密 completed"
+            ls -la "${SITE_DIR}/posts/gpt-api/"
+            
+            FIRST_HTML=$(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" | head -n1)
+            echo "📄 Check encrypted html head: ${FIRST_HTML}"
+            head -c 500 "${FIRST_HTML}"
+          else
+            echo "⚠️ posts dir not found"
+          fi
       # ========== 新增：StatiCrypt 加密结束 ==========
 
 
