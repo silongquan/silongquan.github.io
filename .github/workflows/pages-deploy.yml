@@ -86,24 +86,33 @@ jobs:
             
             while IFS= read -r -d '' file; do
               echo "🔐 Encrypting: $file"
-              # pipe "y" to answer interactive password warning prompt
-              echo y | npx staticrypt "$file" -p "${STATICRYPT_PASSWORD}" --template staticrypt-template.html -o "${file}.tmp"
-              echo "📦 Temp file created: ${file}.tmp"
-              ls -lh "${file}.tmp"
+              # No -o flag, staticrypt auto create ${file}.encrypted.html
+              npx staticrypt "$file" -p "${STATICRYPT_PASSWORD}" --template staticrypt-template.html 2> encrypt.err
+              ret=$?
+              echo "🔴 staticrypt exit code: $ret"
+              cat encrypt.err
+              if [ $ret -ne 0 ]; then
+                echo "❌ staticrypt FAILED for $file"
+                exit 1
+              fi
+              encrypted_out="${file%.html}.encrypted.html"
+              echo "📄 Staticrypt auto output: ${encrypted_out}"
+              ls -lh "${encrypted_out}"
+              # rename to tmp and replace original html
+              mv "${encrypted_out}" "${file}.tmp"
               mv "${file}.tmp" "$file"
-              rm -f "${file}.bak"
+              rm -f encrypt.err
             done < <(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" -print0)
 
-            echo "✅ posts博文加密 completed"
-            ls -la "${SITE_DIR}/posts/gpt-api/"
-            
-            FIRST_HTML=$(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" | head -n1)
-            echo "📄 Check encrypted html head: ${FIRST_HTML}"
-            head -c 500 "${FIRST_HTML}"
-          else
-            echo "⚠️ posts dir not found"
-          fi
-        shell: /usr/bin/bash -e {0}
+          echo "✅ posts博文加密 completed"
+          ls -la "${SITE_DIR}/posts/gpt-api/"
+          
+          FIRST_HTML=$(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" | head -n1)
+          echo "📄 Check encrypted html head: ${FIRST_HTML}"
+          head -c 500 "${FIRST_HTML}"
+        else
+          echo "⚠️ posts dir not found"
+        fi
       # ========== 新增：StatiCrypt 加密结束 ==========
 
 
