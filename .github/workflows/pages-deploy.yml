@@ -86,7 +86,7 @@ jobs:
             
             while IFS= read -r -d '' file; do
               echo "🔐 Encrypting: $file"
-              # No -o flag, staticrypt auto create ${file}.encrypted.html
+              # --template 参数时 staticrypt 直接原地输出到原文件
               npx staticrypt "$file" -p "${STATICRYPT_PASSWORD}" --template staticrypt-template.html 2> encrypt.err
               ret=$?
               echo "🔴 staticrypt exit code: $ret"
@@ -95,16 +95,12 @@ jobs:
                 echo "❌ staticrypt FAILED for $file"
                 exit 1
               fi
-              encrypted_out="${file%.html}.encrypted.html"
-              echo "📄 Staticrypt auto output: ${encrypted_out}"
-              ls -lh "${encrypted_out}"
-              # rename to tmp and replace original html
-              mv "${encrypted_out}" "${file}.tmp"
-              mv "${file}.tmp" "$file"
+              echo "✅ Finished encrypt: $file"
+              ls -lh "${file}"
               rm -f encrypt.err
             done < <(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" -print0)
 
-            echo "✅ posts博文加密 completed"
+            echo "✅ All posts encryption completed"
             ls -la "${SITE_DIR}/posts/gpt-api/"
             
             FIRST_HTML=$(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" | head -n1)
