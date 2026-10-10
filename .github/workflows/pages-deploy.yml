@@ -77,14 +77,17 @@ jobs:
           fi
           echo "✅ Template file found"
 
+          # Debug: print password length to verify
+          echo "🔑 Password length: ${#STATICRYPT_PASSWORD}"
+
           if [ -d "${SITE_DIR}/posts" ]; then
             echo "🔍 Files to be encrypted:"
             find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html"
             
             while IFS= read -r -d '' file; do
               echo "🔐 Encrypting: $file"
-              # Remove deprecated --short for staticrypt v3.5.4
-              npx staticrypt "$file" -p "${STATICRYPT_PASSWORD}" --template staticrypt-template.html -o "${file}.tmp"
+              # --yes skip interactive prompt for CI
+              npx staticrypt "$file" -p "${STATICRYPT_PASSWORD}" --template staticrypt-template.html --yes -o "${file}.tmp"
               echo "📦 Temp file created: ${file}.tmp"
               ls -lh "${file}.tmp"
               mv "${file}.tmp" "$file"
