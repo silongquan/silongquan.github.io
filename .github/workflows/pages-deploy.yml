@@ -67,6 +67,7 @@ jobs:
         run: |
           SITE_DIR="_site${{ steps.pages.outputs.base_path }}"
           echo "👉 Target site directory: ${SITE_DIR}"
+          rm -rf "${SITE_DIR}/encrypted"
           find "${SITE_DIR}" -name "*.bak" -delete
           echo "🧹 Pre cleaned *.bak"
 
@@ -77,33 +78,32 @@ jobs:
           fi
           echo "✅ Template file found"
 
-          # Debug: print password length to verify
           echo "🔑 Password length: ${#STATICRYPT_PASSWORD}"
 
           if [ -d "${SITE_DIR}/posts" ]; then
             echo "🔍 Files to be encrypted:"
             find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html"
-            
-            while IFS= read -r -d '' file; do
-              echo "🔐 Encrypting: $file"
-              # output to tmp file first
-              npx staticrypt "$file" -p "${STATICRYPT_PASSWORD}" --template staticrypt-template.html --config false -o tmp_encrypt.html 2> encrypt.err
-              ret=$?
-              echo "🔴 staticrypt exit code: $ret"
-              cat encrypt.err
-              if [ $ret -ne 0 ]; then
-                echo "❌ staticrypt FAILED for $file"
-                exit 1
-              fi
-              if [ ! -f tmp_encrypt.html ]; then
-                echo "❌ tmp_encrypt.html not generated"
-                exit 1
-              fi
-              mv tmp_encrypt.html "$file"
-              echo "✅ Finished encrypt: $file"
-              ls -lh "${file}"
-              rm -f encrypt.err
-            done < <(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" -print0)
+
+            # v3 official recursive encrypt, -r recursive, -d output dir
+            npx staticrypt "${SITE_DIR}/posts" -r \
+              -p "${STATICRYPT_PASSWORD}" \
+              --file-template staticrypt-template.html \
+              --config false \
+              -d "${SITE_DIR}/encrypted" 2> encrypt.err
+            ret=$?
+            echo "🔴 staticrypt exit code: $ret"
+            cat encrypt.err
+            if [ $ret -ne 0 ]; then
+              echo "❌ staticrypt FAILED"
+              exit 1
+            fi
+
+            echo "✅ Encrypted files generated in ${SITE_DIR}/encrypted"
+            ls -R "${SITE_DIR}/encrypted"
+
+            # Overwrite original posts folder with encrypted html
+            cp -r "${SITE_DIR}/encrypted/." "${SITE_DIR}/posts/"
+            rm -rf "${SITE_DIR}/encrypted" encrypt.err
 
             echo "✅ All posts encryption completed"
             ls -la "${SITE_DIR}/posts/gpt-api/"
