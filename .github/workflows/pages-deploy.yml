@@ -72,8 +72,8 @@ jobs:
           echo "👉 Target site directory: ${SITE_DIR}"
           ls -la "${SITE_DIR}"
           # 加密 private 下所有html，增加判断：目录不存在则跳过不报错
-          if [ -d "${SITE_DIR}/private" ]; then
-            find "${SITE_DIR}/private" -type f -name "*.html" | xargs -I {} staticrypt "{}" -p "${STATICRYPT_PASSWORD}" --short
+          if [ -d "${SITE_DIR}" ]; then
+            find "${SITE_DIR}" -type f -name "*.html" | xargs -I {} staticrypt "{}" -p "${STATICRYPT_PASSWORD}" --short
             find "${SITE_DIR}" -name "*.bak" -delete
             echo "✅ 私密页面加密完成"
           else
