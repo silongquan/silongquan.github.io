@@ -55,6 +55,27 @@ jobs:
         env:
           JEKYLL_ENV: "production"
 
+
+      # ========== 新增：StatiCrypt 加密开始 ==========
+      - name: Setup Node.js for staticrypt
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install staticrypt
+        run: npm install -g staticrypt
+      - name: Encrypt private pages
+        env:
+          STATICRYPT_PASSWORD: ${{ secrets.STATICRYPT_PASS }}
+        run: |
+          SITE_DIR="_site${{ steps.pages.outputs.base_path }}"
+          # 加密 private 目录下全部 html，--short 使用简洁密码弹窗
+          staticrypt "${SITE_DIR}/private/**/*.html" -p "${STATICRYPT_PASSWORD}" --short
+          # staticrypt 会生成 .bak 备份文件，清理掉，避免htmlproofer报错
+          find "${SITE_DIR}" -name "*.bak" -delete
+          echo "✅ 私密页面加密完成"
+      # ========== 新增：StatiCrypt 加密结束 ==========
+
+
       - name: Test site
         run: |
           bundle exec htmlproofer _site \
