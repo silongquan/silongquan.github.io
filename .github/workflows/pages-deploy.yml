@@ -83,13 +83,12 @@ jobs:
             
             while IFS= read -r -d '' file; do
               echo "🔐 Encrypting: $file"
-              npx staticrypt "$file" -p "${STATICRYPT_PASSWORD}" --short --template staticrypt-template.html
-              # staticrypt v3.5.4 output name: file.encrypted.html
-              mv "${file%.html}.encrypted.html" "$file"
+              # -o directly overwrite target file, no mv needed
+              npx staticrypt "$file" -p "${STATICRYPT_PASSWORD}" --short --template staticrypt-template.html -o "$file"
               rm -f "${file}.bak"
             done < <(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" -print0)
 
-            echo "✅ posts博文加密完成"
+            echo "✅ posts博文加密 completed"
             ls -la "${SITE_DIR}/posts/gpt-api/"
             
             FIRST_HTML=$(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" | head -n1)
