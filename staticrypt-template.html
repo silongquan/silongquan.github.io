@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔒 Protected Page</title>
+<style>
+*{box-sizing:border-box}
+body{
+  font-family:system-ui, -apple-system, sans-serif;
+  background: var(--bg,#fff);
+  color:var(--text,#222);
+  margin:0;
+  padding:2rem 1rem;
+}
+@media (prefers-color-scheme: dark){
+  :root{--bg:#1b1b1e;--text:#e5e5e5;}
+}
+.wrap{max-width:520px;margin:5rem auto;}
+#staticrypt-password{
+  width:100%;padding:0.7rem 0.6rem;font-size:1rem;margin:0.6rem 0;
+  border:1px solid #aaa;border-radius:6px;background:transparent;color:inherit;
+}
+#unlockBtn{
+  padding:0.7rem 1.2rem;cursor:pointer;border:none;border-radius:6px;
+  background:#4083c1;color:white;font-size:1rem;
+}
+#unlockBtn:disabled{opacity:0.6;cursor:not-allowed;}
+#staticrypt-error{color:#ff4444;display:none;margin-top:0.5rem;}
+.loading{display:none;margin-top:0.5rem;color:#777;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h2>🔒 This page is password protected</h2>
+  <p>Please input password to unlock this article.</p>
+  <input type="password" id="staticrypt-password" placeholder="Password">
+  <button id="unlockBtn">Unlock</button>
+  <div class="loading" id="loadingTxt">Decrypting...</div>
+  <p id="staticrypt-error">❌ Wrong password, try again.</p>
+</div>
+
+<script>
+var staticryptEncryptedContent = /*[|encryptedContent|]*/0;
+var staticryptSalt = /*[|salt|]*/0;
+var staticryptIv = /*[|iv|]*/0;
+var staticryptHint = /*[|hint|]*/0;
+
+let isDecrypting = false;
+async function staticryptDecrypt(){
+  if(isDecrypting) return;
+  const pwInput = document.getElementById("staticrypt-password");
+  const btn = document.getElementById("unlockBtn");
+  const errDom = document.getElementById("staticrypt-error");
+  const loadingDom = document.getElementById("loadingTxt");
+  const pass = pwInput.value.trim();
+  if(!pass) return;
+
+  isDecrypting = true;
+  btn.disabled = true;
+  loadingDom.style.display="block";
+  errDom.style.display="none";
+
+  // 放到浏览器空闲时段执行解密，防止阻塞UI
+  requestIdleCallback(async ()=>{
+    try{
+      const html = await staticrypt.decrypt(pass, staticryptEncryptedContent, staticryptSalt, staticryptIv);
+      document.body.innerHTML = html;
+    }catch(e){
+      errDom.style.display="block";
+    }finally{
+      isDecrypting = false;
+      btn.disabled = false;
+      loadingDom.style.display="none";
+    }
+  });
+}
+// 回车触发解密
+document.getElementById("staticrypt-password").addEventListener("keydown",function(e){
+  if(e.key==="Enter") staticryptDecrypt();
+});
+document.getElementById("unlockBtn").addEventListener("click",staticryptDecrypt);
+</script>
+<!-- defer: 延迟加载JS，页面DOM先渲染，输入框不会卡死 -->
+<script src="https://cdn.jsdelivr.net/npm/staticrypt@3.5.4/dist/staticrypt.min.js" defer></script>
+</body>
+</html>
