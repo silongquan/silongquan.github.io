@@ -67,17 +67,22 @@ jobs:
         env:
           STATICRYPT_PASSWORD: ${{ secrets.STATICRYPT_PASS }}
         run: |
-          # 统一使用 Jekyll 真实输出目录
           SITE_DIR="_site${{ steps.pages.outputs.base_path }}"
           echo "👉 Target site directory: ${SITE_DIR}"
           ls -la "${SITE_DIR}"
-          # 加密 private 下所有html，增加判断：目录不存在则跳过不报错
-          if [ -d "${SITE_DIR}" ]; then
-            find "${SITE_DIR}" -type f -name "*.html" | xargs -I {} staticrypt "{}" -p "${STATICRYPT_PASSWORD}" --short
+          # Pre-clean bak
+          find "${SITE_DIR}" -name "*.bak" -delete
+          echo "🧹 Pre cleaned *.bak"
+
+          if [ -d "${SITE_DIR}/posts" ]; then
+            echo "🔍 Files to be encrypted:"
+            find "${SITE_DIR}/posts" -type f -name "*.html"
+            find "${SITE_DIR}/posts" -type f -name "*.html" | xargs -I {} staticrypt "{}" -p "${STATICRYPT_PASSWORD}" --short
             find "${SITE_DIR}" -name "*.bak" -delete
-            echo "✅ 私密页面加密完成"
+            echo "✅ posts博文加密完成"
+            ls -la "${SITE_DIR}/posts"
           else
-            echo "⚠️ ${SITE_DIR}/private 目录不存在，跳过加密"
+            echo "⚠️ ${SITE_DIR}/posts 目录不存在，跳过加密"
           fi
         shell: /usr/bin/bash -e {0}
       # ========== 新增：StatiCrypt 加密结束 ==========
