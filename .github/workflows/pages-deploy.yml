@@ -61,12 +61,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Install staticrypt
-        run: npm install -g staticrypt
-             staticrypt --version
-      - name: Encrypt private pages
+      - name: Encrypt posts article html (mv overwrite mode, fully compatible)
         env:
-          STATICRYPT_PASSWORD: ${{ secrets.STATICRYPT_PASS }}
+          STATICRYPT_PASSWORD: ${{ secrets.STATICRYPT_PASSWORD }}
         run: |
           SITE_DIR="_site${{ steps.pages.outputs.base_path }}"
           echo "👉 Target site directory: ${SITE_DIR}"
@@ -86,9 +83,8 @@ jobs:
             
             while IFS= read -r -d '' file; do
               echo "🔐 Encrypting: $file"
-              # default generate file_encrypted.html
-              staticrypt "$file" -p "${STATICRYPT_PASSWORD}" --short --template staticrypt-template.html
-              # replace original file
+              # npx auto pull staticrypt
+              npx staticrypt "$file" -p "${STATICRYPT_PASSWORD}" --short --template staticrypt-template.html
               mv "${file%.html}_encrypted.html" "$file"
               rm -f "${file}.bak"
             done < <(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" -print0)
