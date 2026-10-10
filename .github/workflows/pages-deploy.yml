@@ -105,9 +105,9 @@ jobs:
             cp -r "${SITE_DIR}/encrypted/posts/." "${SITE_DIR}/posts/"
 
             # 验证覆盖结果，打印加密后的文件头部
-            FIRST_HTML=$(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" | head -n1)
-            echo "📄 After copy, check file: ${FIRST_HTML}"
-            head -c 1000 "${FIRST_HTML}"
+            # FIRST_HTML=$(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" | head -n1)
+            # echo "📄 After copy, check file: ${FIRST_HTML}"
+            # head -c 1000 "${FIRST_HTML}"
 
             rm -rf "${SITE_DIR}/encrypted" encrypt.err
             echo "✅ All posts encryption completed"
