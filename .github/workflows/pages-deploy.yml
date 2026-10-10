@@ -101,16 +101,16 @@ jobs:
             echo "✅ Encrypted files generated in ${SITE_DIR}/encrypted"
             ls -R "${SITE_DIR}/encrypted"
 
-            # Overwrite original posts folder with encrypted html
-            cp -r "${SITE_DIR}/encrypted/." "${SITE_DIR}/posts/"
-            rm -rf "${SITE_DIR}/encrypted" encrypt.err
+            # 【FIX】复制 encrypted/posts 里面全部内容覆盖原posts目录
+            cp -r "${SITE_DIR}/encrypted/posts/." "${SITE_DIR}/posts/"
 
-            echo "✅ All posts encryption completed"
-            ls -la "${SITE_DIR}/posts/gpt-api/"
-            
+            # 验证覆盖结果，打印加密后的文件头部
             FIRST_HTML=$(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" | head -n1)
-            echo "📄 Check encrypted html head: ${FIRST_HTML}"
+            echo "📄 After copy, check file: ${FIRST_HTML}"
             head -c 1000 "${FIRST_HTML}"
+
+            rm -rf "${SITE_DIR}/encrypted" encrypt.err
+            echo "✅ All posts encryption completed"
           else
             echo "⚠️ posts dir not found"
           fi
