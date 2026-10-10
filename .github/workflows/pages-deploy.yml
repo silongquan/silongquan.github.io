@@ -86,8 +86,8 @@ jobs:
             
             while IFS= read -r -d '' file; do
               echo "🔐 Encrypting: $file"
-              # --template 参数时 staticrypt 直接原地输出到原文件
-              npx staticrypt "$file" -p "${STATICRYPT_PASSWORD}" --template staticrypt-template.html 2> encrypt.err
+              # output to tmp file first
+              npx staticrypt "$file" -p "${STATICRYPT_PASSWORD}" --template staticrypt-template.html --config false -o tmp_encrypt.html 2> encrypt.err
               ret=$?
               echo "🔴 staticrypt exit code: $ret"
               cat encrypt.err
@@ -95,6 +95,11 @@ jobs:
                 echo "❌ staticrypt FAILED for $file"
                 exit 1
               fi
+              if [ ! -f tmp_encrypt.html ]; then
+                echo "❌ tmp_encrypt.html not generated"
+                exit 1
+              fi
+              mv tmp_encrypt.html "$file"
               echo "✅ Finished encrypt: $file"
               ls -lh "${file}"
               rm -f encrypt.err
@@ -105,7 +110,7 @@ jobs:
             
             FIRST_HTML=$(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" | head -n1)
             echo "📄 Check encrypted html head: ${FIRST_HTML}"
-            head -c 500 "${FIRST_HTML}"
+            head -c 1000 "${FIRST_HTML}"
           else
             echo "⚠️ posts dir not found"
           fi
