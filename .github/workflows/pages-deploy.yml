@@ -86,8 +86,8 @@ jobs:
             
             while IFS= read -r -d '' file; do
               echo "🔐 Encrypting: $file"
-              # --yes skip interactive prompt for CI
-              npx staticrypt "$file" -p "${STATICRYPT_PASSWORD}" --template staticrypt-template.html --yes -o "${file}.tmp"
+              # pipe "y" to answer interactive password warning prompt
+              echo y | npx staticrypt "$file" -p "${STATICRYPT_PASSWORD}" --template staticrypt-template.html -o "${file}.tmp"
               echo "📦 Temp file created: ${file}.tmp"
               ls -lh "${file}.tmp"
               mv "${file}.tmp" "$file"
