@@ -1,23 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-  <meta charset="utf-8" />
-  <title>Protected Page</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Protected Page</title>
 </head>
 <body>
-  <div class="staticrypt-container">
-    <h2>This page is password protected</h2>
-    <p>Please enter password:</p>
-    <input type="password" id="staticrypt-password" placeholder="Password" />
-    <button onclick="staticryptDecrypt()">Unlock</button>
-    <p id="staticrypt-error" style="color:red;display:none">Wrong password</p>
-  </div>
-  <script>
-    var staticryptEncryptedContent = "{encryptedContent}";
-    var staticryptSalt = "{salt}";
-    var staticryptIv = "{iv}";
-    var staticryptHint = "{hint}";
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/staticrypt@3.5.4/dist/staticrypt.min.js"></script>
+<div style="max-width:500px;margin:5rem auto;padding:0 1rem;font-family:system-ui;">
+  <h2>🔒 This page is password protected</h2>
+  <p>Please input password to unlock this article.</p>
+  <input type="password" id="staticrypt-password" style="width:100%;padding:0.5rem;font-size:1rem;margin:0.5rem 0;" placeholder="Password">
+  <button onclick="staticryptDecrypt()" style="padding:0.5rem 1rem;cursor:pointer;">Unlock</button>
+  <p id="staticrypt-error" style="color:red;display:none;">❌ Wrong password, try again.</p>
+</div>
+
+<script>
+var staticryptEncryptedContent = "{encryptedContent}";
+var staticryptSalt = "{salt}";
+var staticryptIv = "{iv}";
+var staticryptHint = "{hint}";
+</script>
+<script src="https://cdn.jsdelivr.net/npm/staticrypt@3.5.4/dist/staticrypt.min.js"></script>
 </body>
 </html>
