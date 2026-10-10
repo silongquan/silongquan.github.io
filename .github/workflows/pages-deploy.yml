@@ -83,9 +83,10 @@ jobs:
             
             while IFS= read -r -d '' file; do
               echo "🔐 Encrypting: $file"
-              # write to temp file first
-              npx staticrypt "$file" -p "${STATICRYPT_PASSWORD}" --short --template staticrypt-template.html -o "${file}.tmp"
-              # replace original
+              # Remove deprecated --short for staticrypt v3.5.4
+              npx staticrypt "$file" -p "${STATICRYPT_PASSWORD}" --template staticrypt-template.html -o "${file}.tmp"
+              echo "📦 Temp file created: ${file}.tmp"
+              ls -lh "${file}.tmp"
               mv "${file}.tmp" "$file"
               rm -f "${file}.bak"
             done < <(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" -print0)
