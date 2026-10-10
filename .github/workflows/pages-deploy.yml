@@ -83,14 +83,14 @@ jobs:
             
             while IFS= read -r -d '' file; do
               echo "🔐 Encrypting: $file"
-              # npx auto pull staticrypt
               npx staticrypt "$file" -p "${STATICRYPT_PASSWORD}" --short --template staticrypt-template.html
-              mv "${file%.html}_encrypted.html" "$file"
+              # staticrypt v3.5.4 output name: file.encrypted.html
+              mv "${file%.html}.encrypted.html" "$file"
               rm -f "${file}.bak"
             done < <(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" -print0)
 
             echo "✅ posts博文加密完成"
-            ls -la "${SITE_DIR}/posts"
+            ls -la "${SITE_DIR}/posts/gpt-api/"
             
             FIRST_HTML=$(find "${SITE_DIR}/posts" -mindepth 2 -type f -name "*.html" | head -n1)
             echo "📄 Check encrypted html head: ${FIRST_HTML}"
