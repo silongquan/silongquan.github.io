@@ -69,20 +69,30 @@ jobs:
         run: |
           SITE_DIR="_site${{ steps.pages.outputs.base_path }}"
           echo "👉 Target site directory: ${SITE_DIR}"
-          ls -la "${SITE_DIR}"
-          # Pre-clean bak
           find "${SITE_DIR}" -name "*.bak" -delete
           echo "🧹 Pre cleaned *.bak"
-
+      
           if [ -d "${SITE_DIR}/posts" ]; then
             echo "🔍 Files to be encrypted:"
             find "${SITE_DIR}/posts" -type f -name "*.html"
-            find "${SITE_DIR}/posts" -type f -name "*.html" | xargs -I {} staticrypt "{}" -p "${STATICRYPT_PASSWORD}" --short
-            find "${SITE_DIR}" -name "*.bak" -delete
+            
+            # 改用bash循环，不再使用xargs（修复xargs静默不写入的bug）
+            while IFS= read -r -d '' file; do
+              echo "🔐 Encrypting: $file"
+              staticrypt "$file" -p "${STATICRYPT_PASSWORD}" --short --template staticrypt-template.html
+              # 删除staticrypt生成的bak备份
+              rm -f "${file}.bak"
+            done < <(find "${SITE_DIR}/posts" -type f -name "*.html" -print0)
+      
             echo "✅ posts博文加密完成"
             ls -la "${SITE_DIR}/posts"
+            
+            # 校验第一个文件内容
+            FIRST_HTML=$(find "${SITE_DIR}/posts" -type f -name "*.html" | head -n1)
+            echo "📄 Check encrypted html head: ${FIRST_HTML}"
+            head -c 300 "${FIRST_HTML}"
           else
-            echo "⚠️ ${SITE_DIR}/posts 目录不存在，跳过加密"
+            echo "⚠️ posts dir not found"
           fi
         shell: /usr/bin/bash -e {0}
       # ========== 新增：StatiCrypt 加密结束 ==========
