@@ -67,12 +67,11 @@ jobs:
         env:
           STATICRYPT_PASSWORD: ${{ secrets.STATICRYPT_PASS }}
         run: |
-          SITE_DIR="_site${{ steps.pages.outputs.base_path }}"
-          # 加密 private 目录下全部 html，--short 使用简洁密码弹窗
-          staticrypt "${SITE_DIR}/private/**/*.html" -p "${STATICRYPT_PASSWORD}" --short
-          # staticrypt 会生成 .bak 备份文件，清理掉，避免htmlproofer报错
+          SITE_DIR="_site"
+          find "${SITE_DIR}/private" -type f -name "*.html" | xargs -I {} staticrypt "{}" -p "${STATICRYPT_PASSWORD}" --short
           find "${SITE_DIR}" -name "*.bak" -delete
           echo "✅ 私密页面加密完成"
+        shell: /usr/bin/bash -e {0}
       # ========== 新增：StatiCrypt 加密结束 ==========
 
 
