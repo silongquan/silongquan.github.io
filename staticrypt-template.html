@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>{{title}}</title>
-  <!-- 修复Chirpy资源路径！关键 -->
-  <base href="/">
+  <meta charset="utf-8" />
+  <title>Protected Page</title>
 </head>
 <body>
-  <div style="margin: 40px auto; max-width: 600px; padding: 0 20px;">
-    <h2>🔒 私密博文，请输入访问密码</h2>
-    <p>此页面为课程/笔记私密内容，验证后方可查看</p>
-    <input type="password" id="staticrypt-password" placeholder="输入密码" style="padding:6px;width:70%;font-size:16px;">
-    <button onclick="staticryptDecrypt()" style="padding:6px 12px;cursor:pointer">解锁</button>
-    <p id="staticrypt-error" style="color:red;display:none">密码错误，请重试</p>
+  <div class="staticrypt-container">
+    <h2>This page is password protected</h2>
+    <p>Please enter password:</p>
+    <input type="password" id="staticrypt-password" placeholder="Password" />
+    <button onclick="staticryptDecrypt()">Unlock</button>
+    <p id="staticrypt-error" style="color:red;display:none">Wrong password</p>
   </div>
-  {{{staticrypt-script}}}
+  <script>
+    var staticryptEncryptedContent = "{encryptedContent}";
+    var staticryptSalt = "{salt}";
+    var staticryptIv = "{iv}";
+    var staticryptHint = "{hint}";
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/staticrypt@3.5.4/dist/staticrypt.min.js"></script>
 </body>
 </html>
