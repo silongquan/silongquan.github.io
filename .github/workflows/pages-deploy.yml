@@ -87,6 +87,7 @@ jobs:
             # v3 official recursive encrypt, -r recursive, -d output dir
             npx staticrypt "${SITE_DIR}/posts" -r \
               -p "${STATICRYPT_PASSWORD}" \
+              --short \
               --file-template staticrypt-template.html \
               --config false \
               -d "${SITE_DIR}/encrypted" 2> encrypt.err
